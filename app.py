@@ -261,7 +261,8 @@ if st.button("진단하기"):
     st.progress(risk)
     
     st.write(f"위험도 : {risk}%")
-        st.subheader("📈 농장 상태")
+
+    st.subheader("📈 농장 상태")
     
     col1, col2, col3 = st.columns(3)
     
@@ -271,5 +272,5 @@ if st.button("진단하기"):
     with col2:
         st.metric("위험도", 18)
     
-    with col3
+    with col3:
         st.metric("연구원 수", 5)
