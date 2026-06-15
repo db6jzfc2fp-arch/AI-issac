@@ -7,6 +7,11 @@ symptom = st.text_input("증상 입력")
 temp = st.number_input("온도", value=25)
 humidity = st.number_input("습도", value=70)
 
+crop = st.selectbox(
+    "작물 선택",
+    ["토마토", "파프리카", "딸기", "포도"]
+)
+
 if st.button("진단하기"):
 
     st.subheader("👨‍🔬 연구원 회의")
