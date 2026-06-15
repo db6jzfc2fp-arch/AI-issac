@@ -93,9 +93,9 @@ if st.button("진단하기"):
     "관수 연구원": 0,
     "양분 연구원": 0,
     "환경 연구원": 0,
-    "병해충 연구원": 0
+    "병해충 연구원": 0,
+    "경영 연구원": 0
 }
-
     # 관수 연구원
     if humidity < 50:
         scores["관수 연구원"] += 30
@@ -239,7 +239,7 @@ if st.button("진단하기"):
 
     st.success(
         f"""
-    📍 지역 : {city} {town}
+    📍 지역 : {region} {town}
     
     🌱 작물 : {crop}
     
@@ -275,19 +275,19 @@ if st.button("진단하기"):
     st.write(f"위험도 : {risk}%")
     st.subheader("📍 지역 맞춤 분석")
 
-    if city == "천안":
+    if region == "천안":
         st.info("천안은 배·포도·시설채소 재배가 활발한 지역입니다.")
     
-    elif city == "아산":
+    elif region == "아산":
         st.info("아산은 시설원예와 수도작 비중이 높은 지역입니다.")
     
-    elif city == "논산":
+    elif region == "논산":
         st.info("논산은 딸기와 엽채류 재배 중심지입니다.")
     
-    elif city == "당진":
+    elif region == "당진":
         st.info("당진은 벼와 시설채소 재배가 활발합니다.")
     
-    elif city == "예산":
+    elif region == "예산":
         st.info("예산은 사과 재배 비중이 높은 지역입니다.")
         st.subheader("📈 농장 상태")
     
