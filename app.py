@@ -261,7 +261,13 @@ if st.button("진단하기"):
             humidity_min, humidity_max = disease["humidity"]
         
             st.subheader("🔍 분석 근거")
-        
+            if symptom in disease_db:
+
+                st.subheader("📋 권장 조치")
+            
+                for advice in disease_db[symptom]["advice"]:
+                    st.write(f"✅ {advice}")
+                    
             if temp_min <= temp <= temp_max:
                 st.write(f"✅ 온도 {temp}℃ : 발생 적합 구간")
         
