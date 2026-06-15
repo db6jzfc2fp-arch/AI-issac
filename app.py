@@ -1,5 +1,45 @@
 import streamlit as st
+disease_db = {
+    "흰가루병": {
+        "temp": (20, 28),
+        "humidity": (60, 85),
+        "advice": [
+            "환기 강화",
+            "하엽 제거",
+            "7일 이내 방제"
+        ]
+    },
 
+    "노균병": {
+        "temp": (15, 25),
+        "humidity": (80, 100),
+        "advice": [
+            "과습 방지",
+            "배수 관리",
+            "예방 살균제 검토"
+        ]
+    },
+
+    "역병": {
+        "temp": (18, 30),
+        "humidity": (85, 100),
+        "advice": [
+            "배수 개선",
+            "관수량 조절",
+            "방제 실시"
+        ]
+    },
+
+    "배꼽썩음": {
+        "temp": (20, 35),
+        "humidity": (40, 80),
+        "advice": [
+            "칼슘 공급",
+            "급격한 수분 변화 방지",
+            "관수 균일화"
+        ]
+    }
+}
 # 제목
 st.title("🌱 HG Lab")
 st.caption("Multi-Agent Agricultural Research Lab")
