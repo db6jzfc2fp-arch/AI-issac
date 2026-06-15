@@ -1,7 +1,8 @@
 
 import streamlit as st
 
-st.title("🍅 AI 이삭 방울토마토 연구소")
+st.title("🧬 Hyogrow")
+st.caption("Multi-Agent Agricultural Research Lab")
 
 symptom = st.text_input("증상 입력")
 temp = st.number_input("온도", value=25)
@@ -16,7 +17,13 @@ if st.button("진단하기"):
 
     st.subheader("👨‍🔬 연구원 회의")
 
-    scores = {}
+   scores = {
+    "환경 연구원": 0,
+    "관수 연구원": 0,
+    "양분 연구원": 0,
+    "병해 연구원": 0,
+    "경영 연구원": 0
+}
 
     env = 40
 
