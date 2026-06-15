@@ -1,7 +1,7 @@
 import streamlit as st
 
 # 제목
-st.title("🧬 Hyogrow")
+st.title("🌱 HG Lab")
 st.caption("Multi-Agent Agricultural Research Lab")
 
 # 입력
@@ -23,8 +23,66 @@ humidity = st.number_input(
 
 crop = st.selectbox(
     "작물 선택",
-    ["토마토", "파프리카", "딸기", "포도"]
+[
+"토마토",
+"방울토마토",
+"파프리카",
+"고추",
+"오이",
+"딸기",
+"포도",
+"사과",
+"배",
+"복숭아",
+"감귤",
+"블루베리",
+"수박",
+"멜론",
+"참외",
+"상추",
+"배추",
+"벼",
+"인삼",
+"콩"
+]
 )
+
+region = st.selectbox(
+    "충남 시군 선택",
+    [
+        "천안",
+        "아산",
+        "공주",
+        "보령",
+        "논산",
+        "계룡",
+        "당진",
+        "서산",
+        "태안",
+        "홍성",
+        "예산",
+        "청양",
+        "부여",
+        "서천",
+        "금산"
+    ]
+)
+
+if region == "천안":
+    town = st.selectbox(
+        "천안 읍면 선택",
+        [
+            "성환읍",
+            "직산읍",
+            "성거읍",
+            "입장면",
+            "목천읍",
+            "병천면",
+            "수신면"
+        ]
+    )
+else:
+    town = "-"
 
 # 진단 버튼
 if st.button("진단하기"):
@@ -38,6 +96,25 @@ if st.button("진단하기"):
         "병해충 연구원": 40,
         "경영 연구원": 40
     }
+
+    # 관수 연구원
+if humidity < 50:
+    scores["관수 연구원"] += 30
+    st.write("💧 관수 연구원 : 수분 부족 가능성")
+
+elif humidity > 90:
+    scores["관수 연구원"] += 30
+    st.write("💧 관수 연구원 : 과습 위험")
+
+# 양분 연구원
+if symptom == "배꼽썩음":
+    scores["양분 연구원"] += 50
+    st.write("🧪 양분 연구원 : 칼슘 결핍 의심")
+
+# 경영 연구원
+if scores["병해충 연구원"] >= 80:
+    scores["경영 연구원"] += 20
+    st.write("📈 경영 연구원 : 방제 비용 증가 예상")
 
     # 환경 연구원
     if temp >= 35:
@@ -73,16 +150,33 @@ if st.button("진단하기"):
     st.write(f"🏆 핵심 연구원 : {best_agent}")
 
     # 점수 순위
-    st.subheader("📊 연구원 점수")
+    rank_icons = ["🥇", "🥈", "🥉", "🏅", "🏅"]
 
-    sorted_scores = sorted(
-        scores.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )
+sorted_scores = sorted(
+    scores.items(),
+    key=lambda x: x[1],
+    reverse=True
+)
 
-    for name, score in sorted_scores:
-        st.write(f"• {name} : {score}점")
+for idx, (name, score) in enumerate(sorted_scores):
+    st.write(f"{rank_icons[idx]} {name} : {score}점")
+
+best_agent = sorted_scores[0][0]
+
+st.subheader("🏆 핵심 연구원")
+
+st.success(f"{best_agent}의 의견이 가장 중요합니다.")
+
+st.subheader("📋 HG Lab Core AI")
+
+if scores["병해충 연구원"] >= 80:
+    st.error("병해충 위험도가 높습니다. 즉시 방제를 검토하세요.")
+
+elif scores["환경 연구원"] >= 80:
+    st.warning("고온 스트레스가 의심됩니다.")
+
+else:
+    st.success("현재 농장 상태는 양호합니다.")
 
     # 농장 상태
     st.subheader("📈 농장 상태")
@@ -107,7 +201,19 @@ if st.button("진단하기"):
     st.success(f"최종 진단 : {result}")
 
 st.info(
-  "HG Lab Core AI : 연구원 의견을 종합한 최종 판단입니다."
+    f"""
+📍 지역 : 충남 {region} {town}
+
+🌾 작물 : {crop}
+
+🌡 온도 : {temp}℃
+
+💧 습도 : {humidity}%
+
+🧠 핵심 연구원 : {best_agent}
+
+최종 판단 : {result}
+"""
 )
 
 # 여기부터 추가
