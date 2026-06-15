@@ -51,17 +51,12 @@ if temp >= 35:
 if symptom == "배꼽썩음":
     st.write("👨‍🔬 양분 연구원")
     st.write('"칼슘 결핍 가능성이 높습니다."')
+best_agent = max(scores, key=scores.get)
 
 if humidity >= 85:
     st.write("👨‍🔬 병해충 연구원")
     st.write('"병원균 감염 여부를 확인해야 합니다."')
-    best_agent = max(scores, key=scores.get)
-
-st.write("")
-st.write(f"🏆 핵심 연구원 : {best_agent}")
-
-best_agent = max(scores, key=scores.get)
-
+   
 st.write("")
 st.write(f"🏆 핵심 연구원 : {best_agent}")
 
