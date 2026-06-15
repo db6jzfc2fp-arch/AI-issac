@@ -264,7 +264,46 @@ if st.button("진단하기"):
             if symptom in disease_db:
 
                 st.subheader("📋 권장 조치")
-            
+                st.subheader("🧑‍🔬 연구원 회의")
+
+                # 병해충 연구원
+                st.write("🦠 병해충 연구원")
+                
+                if risk >= 80:
+                    st.write(f"{symptom} 발생 가능성이 높습니다.")
+                elif risk >= 60:
+                    st.write(f"{symptom} 발생 주의가 필요합니다.")
+                else:
+                    st.write(f"{symptom} 위험도는 낮습니다.")
+                
+                # 기후 연구원
+                st.write("🌡️ 기후 연구원")
+                
+                if temp >= 35:
+                    st.write("고온 스트레스 위험이 있습니다.")
+                elif temp <= 10:
+                    st.write("저온 피해 가능성이 있습니다.")
+                else:
+                    st.write("현재 온도는 비교적 양호합니다.")
+                
+                # 관수 연구원
+                st.write("💧 관수 연구원")
+                
+                if humidity >= 85:
+                    st.write("과습 위험이 있습니다.")
+                elif humidity <= 50:
+                    st.write("수분 부족 가능성이 있습니다.")
+                else:
+                    st.write("관수 상태는 양호합니다.")
+                
+                # 양분 연구원
+                st.write("🧪 양분 연구원")
+                
+                if symptom == "배꼽썩음":
+                    st.write("칼슘 공급을 검토하세요.")
+                else:
+                    st.write("특이한 양분 결핍 징후는 없습니다.")
+                            
                 for advice in disease_db[symptom]["advice"]:
                     st.write(f"✅ {advice}")
                     
