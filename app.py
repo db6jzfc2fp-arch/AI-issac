@@ -98,8 +98,7 @@ if st.button("진단하기"):
     with col3:
         st.metric("연구원 수", 5)
 
-    st.subheader("🎯 Hyogrow 소장")
-
+    st.subheader("🌱 HG Lab Core AI")
     if symptom == "":
         result = "증상을 입력해주세요."
     else:
@@ -107,6 +106,39 @@ if st.button("진단하기"):
 
     st.success(f"최종 진단 : {result}")
 
-    st.info(
-        "Hyogrow AI가 연구원 의견을 종합하여 판단한 결과입니다."
-    )
+st.info(
+  "HG Lab Core AI : 연구원 의견을 종합한 최종 판단입니다."
+)
+
+# 여기부터 추가
+
+st.subheader("📊 연구원 점수")
+
+scores = {
+    "환경 연구원": 85 if temp >= 35 else 60,
+    "관수 연구원": 80 if humidity < 50 else 65,
+    "양분 연구원": 75 if symptom == "배꼽썩음" else 50,
+    "병해 연구원": 90 if symptom == "노균병" else 55,
+    "경영 연구원": 70
+}
+
+for name, score in sorted(scores.items(), key=lambda x:x[1], reverse=True):
+    st.write(f"🏅 {name} : {score}점")
+
+best_agent = max(scores, key=scores.get)
+
+st.subheader("🏆 핵심 연구원")
+st.success(f"{best_agent}의 의견이 가장 중요합니다.")
+
+st.subheader("📈 농장 상태")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("건강점수", 82)
+
+with col2:
+    st.metric("위험도", 18)
+
+with col3:
+    st.metric("연구원 수", 5)
