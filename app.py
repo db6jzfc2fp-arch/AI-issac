@@ -253,6 +253,26 @@ if st.button("진단하기"):
     
         st.subheader("🌱 HG Lab Core AI")
         risk = calculate_risk(symptom, temp, humidity)
+        if symptom in disease_db:
+
+            disease = disease_db[symptom]
+        
+            temp_min, temp_max = disease["temp"]
+            humidity_min, humidity_max = disease["humidity"]
+        
+            st.subheader("🔍 분석 근거")
+        
+            if temp_min <= temp <= temp_max:
+                st.write(f"✅ 온도 {temp}℃ : 발생 적합 구간")
+        
+            else:
+                st.write(f"❌ 온도 {temp}℃ : 발생 적합 구간 아님")
+        
+            if humidity_min <= humidity <= humidity_max:
+                st.write(f"✅ 습도 {humidity}% : 발생 적합 구간")
+        
+            else:
+                st.write(f"❌ 습도 {humidity}% : 발생 적합 구간 아님")
 
         st.write(f"📊 병 발생 위험도 : {risk}%")
         
