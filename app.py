@@ -40,6 +40,25 @@ disease_db = {
         ]
     }
 }
+def calculate_risk(symptom, temp, humidity):
+
+    if symptom not in disease_db:
+        return 30
+
+    disease = disease_db[symptom]
+
+    risk = 40
+
+    temp_min, temp_max = disease["temp"]
+    humidity_min, humidity_max = disease["humidity"]
+
+    if temp_min <= temp <= temp_max:
+        risk += 25
+
+    if humidity_min <= humidity <= humidity_max:
+        risk += 25
+
+    return min(risk, 100)
 # 제목
 st.title("🌱 HG Lab")
 st.caption("Multi-Agent Agricultural Research Lab")
