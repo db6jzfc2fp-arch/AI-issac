@@ -252,6 +252,18 @@ if st.button("진단하기"):
             st.metric("연구원 수", 5)
     
         st.subheader("🌱 HG Lab Core AI")
+        risk = calculate_risk(symptom, temp, humidity)
+
+        st.write(f"📊 병 발생 위험도 : {risk}%")
+        
+        if risk >= 80:
+            st.error("🔴 고위험")
+        
+        elif risk >= 60:
+            st.warning("🟠 주의 필요")
+        
+        else:
+            st.success("🟢 낮은 위험")
         if symptom == "":
             result = "증상을 입력해주세요."
         else:
