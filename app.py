@@ -17,13 +17,13 @@ if st.button("진단하기"):
 
     st.subheader("👨‍🔬 연구원 회의")
 
-   scores = {
-    "환경 연구원": 0,
-    "관수 연구원": 0,
-    "양분 연구원": 0,
-    "병해 연구원": 0,
-    "경영 연구원": 0
-}
+    scores = {
+        "환경 연구원": 0,
+        "관수 연구원": 0,
+        "양분 연구원": 0,
+        "병해 연구원": 0,
+        "경영 연구원": 0
+    }
 
     env = 40
 
@@ -63,12 +63,13 @@ if temp >= 35:
 if symptom == "배꼽썩음":
     st.write("👨‍🔬 양분 연구원")
     st.write('"칼슘 결핍 가능성이 높습니다."')
-best_agent = max(scores, key=scores.get)
 
 if humidity >= 85:
     st.write("👨‍🔬 병해충 연구원")
     st.write('"병원균 감염 여부를 확인해야 합니다."')
-   
+
+best_agent = max(scores, key=scores.get)  
+
 st.write("")
 st.write(f"🏆 핵심 연구원 : {best_agent}")
 
@@ -84,6 +85,12 @@ for idx, (name, score) in enumerate(
     icon = rank_icons[idx] if idx < len(rank_icons) else "⭐"
     st.write(f"{icon} {name} : {score}점")
 
+if humidity >= 85:
+    st.write("🦠 병해 연구원")
+    st.write("병원균 감염 여부를 확인해야 합니다.")
+
+st.write("")
+st.write(f"🏆 핵심 연구원 : {best_agent}")
 st.subheader("📊 농장 상태")
 
 col1, col2, col3 = st.columns(3)
