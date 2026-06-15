@@ -159,7 +159,8 @@ sorted_scores = sorted(
 )
 
 for idx, (name, score) in enumerate(sorted_scores):
-    st.write(f"{rank_icons[idx]} {name} : {score}점")
+    
+    st.write(f"{name} : {score}점")
 
 best_agent = sorted_scores[0][0]
 
