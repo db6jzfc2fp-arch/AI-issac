@@ -60,7 +60,12 @@ if humidity >= 85:
 st.write("")
 st.write(f"🏆 핵심 연구원 : {best_agent}")
 
-    rank_icons = ["🥇", "🥈", "🥉", "4️⃣"]
+best_agent = max(scores, key=scores.get)
+
+st.write("")
+st.write(f"🏆 핵심 연구원 : {best_agent}")
+
+rank_icons = ["🥇", "🥈", "🥉", "4️⃣"]
 
 for idx, (name, score) in enumerate(
     sorted(
@@ -69,11 +74,10 @@ for idx, (name, score) in enumerate(
         reverse=True
     )
 ):
+    icon = rank_icons[idx] if idx < len(rank_icons) else "⭐"
+    st.write(f"{icon} {name} : {score}점")
 
 st.subheader("📊 농장 상태")
-  
-icon = rank_icons[idx] if idx < len(rank_icons) else "📌"
-st.write(f"{icon} {name} : {score}점")
 
 col1, col2, col3 = st.columns(3)
 
