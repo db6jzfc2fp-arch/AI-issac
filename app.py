@@ -265,6 +265,34 @@ if st.button("진단하기"):
 
                 st.subheader("📋 권장 조치")
                 st.subheader("🧑‍🔬 연구원 회의")
+                st.subheader("🤖 HyoGrow AI 소장 보고서")
+
+                if risk >= 80:
+                    final_level = "고위험"
+                elif risk >= 60:
+                    final_level = "주의"
+                else:
+                    final_level = "양호"
+                
+                st.success(
+                    f"""
+                📍 지역 : {region} {town}
+                
+                🌱 작물 : {crop}
+                
+                🔎 진단 대상 : {symptom}
+                
+                📊 위험도 : {risk}%
+                
+                🚨 종합 평가 : {final_level}
+                
+                📋 HyoGrow 최종 의견
+                
+                현재 {symptom} 발생 가능성이 {final_level} 수준으로 판단됩니다.
+                
+                환경 조건과 입력 정보를 종합했을 때 지속적인 모니터링이 필요하며 권장 조치를 우선 수행하는 것을 추천합니다.
+                """
+                )
 
                 # 병해충 연구원
                 st.write("🦠 병해충 연구원")
