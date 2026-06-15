@@ -70,15 +70,10 @@ for idx, (name, score) in enumerate(
     )
 ):
 
-    icon = rank_icons[idx] if idx < len(rank_icons) else "📌"
-
-    st.write(f"{icon} {name} : {score}점")
-        scores.items(),
-        key=lambda x: x[1],
-        reverse=True
-    ):
-        st.write(f"{name} : {score}점")
 st.subheader("📊 농장 상태")
+  
+icon = rank_icons[idx] if idx < len(rank_icons) else "📌"
+st.write(f"{icon} {name} : {score}점")
 
 col1, col2, col3 = st.columns(3)
 
