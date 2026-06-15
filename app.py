@@ -68,8 +68,6 @@ if humidity >= 85:
     st.write("👨‍🔬 병해충 연구원")
     st.write('"병원균 감염 여부를 확인해야 합니다."')
 
-best_agent = max(scores, key=scores.get)  
-
 st.write("")
 st.write(f"🏆 핵심 연구원 : {best_agent}")
 
@@ -88,6 +86,8 @@ for idx, (name, score) in enumerate(
 if humidity >= 85:
     st.write("🦠 병해 연구원")
     st.write("병원균 감염 여부를 확인해야 합니다.")
+
+best_agent = max(scores, key=scores.get)
 
 st.write("")
 st.write(f"🏆 핵심 연구원 : {best_agent}")
