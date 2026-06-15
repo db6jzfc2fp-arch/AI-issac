@@ -236,8 +236,32 @@ if st.button("진단하기"):
     
     st.subheader("🏆 핵심 연구원")
     st.success(f"{best_agent}의 의견이 가장 중요합니다.")
+
+    st.subheader("🌱 재배 전략")
+
+    if symptom == "흰가루병":
+        st.warning("7일 이내 방제 권장")
+    elif symptom == "역병":
+        st.warning("배수 개선 및 살균제 검토")
+    elif symptom == "배꼽썩음":
+        st.warning("칼슘 공급 필요")
+    else:
+        st.success("특이사항 없음")
     
-    st.subheader("📈 농장 상태")
+    st.subheader("📊 지역 위험도")
+    
+    risk = 30
+    
+    if humidity >= 85:
+        risk += 30
+    
+    if temp >= 35:
+        risk += 20
+    
+    st.progress(risk)
+    
+    st.write(f"위험도 : {risk}%")
+        st.subheader("📈 농장 상태")
     
     col1, col2, col3 = st.columns(3)
     
@@ -247,5 +271,5 @@ if st.button("진단하기"):
     with col2:
         st.metric("위험도", 18)
     
-    with col3:
+    with col3
         st.metric("연구원 수", 5)
