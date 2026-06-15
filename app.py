@@ -98,154 +98,154 @@ if st.button("진단하기"):
     }
 
     # 관수 연구원
-if humidity < 50:
-    scores["관수 연구원"] += 30
-    st.write("💧 관수 연구원 : 수분 부족 가능성")
-
-elif humidity > 90:
-    scores["관수 연구원"] += 30
-    st.write("💧 관수 연구원 : 과습 위험")
-
-# 양분 연구원
-if symptom == "배꼽썩음":
-    scores["양분 연구원"] += 50
-    st.write("🧪 양분 연구원 : 칼슘 결핍 의심")
-
-# 경영 연구원
-if scores["병해충 연구원"] >= 80:
-    scores["경영 연구원"] += 20
-    st.write("🧾 경영 연구원 : 방제 비용 증가 예상")
-   
-    # 환경 연구원
-    if temp >= 35:
-        scores["환경 연구원"] += 50
-        st.write("🌡️ 환경 연구원 : 고온 스트레스 가능성")
-
-    # 병해충 연구원
-    if humidity >= 85:
-        scores["병해충 연구원"] += 50
-        st.write("🦠 병해충 연구원 : 고습 환경 병해 위험")
-
-    # 증상 분석
-    if symptom == "노균병":
-        scores["병해충 연구원"] += 40
-        st.write("🍃 노균병 연구원 : 노균병 의심")
-
-    elif symptom == "역병":
-        scores["병해충 연구원"] += 40
-        st.write("🍃 역병 연구원 : 역병 가능성")
-
-    elif symptom == "흰가루병":
-        scores["병해충 연구원"] += 40
-        st.write("🍃 흰가루병 연구원 : 초기 방제 권장")
-
-    elif symptom == "배꼽썩음":
-        scores["양분 연구원"] += 50
-        st.write("🥛 양분 연구원 : 칼슘 결핍 가능성")
-
-    # 핵심 연구원
-    best_agent = max(scores, key=scores.get)
-
-    st.write("")
-    st.write(f"🏆 핵심 연구원 : {best_agent}")
-
-    # 점수 순위
-    rank_icons = ["🥇", "🥈", "🥉", "🏅", "🏅"]
-
-sorted_scores = sorted(
-    scores.items(),
-    key=lambda x: x[1],
-    reverse=True
-)
-
-for idx, (name, score) in enumerate(sorted_scores):
+    if humidity < 50:
+        scores["관수 연구원"] += 30
+        st.write("💧 관수 연구원 : 수분 부족 가능성")
     
-    st.write(f"{name} : {score}점")
-
-best_agent = sorted_scores[0][0]
-
-st.subheader("🏆 핵심 연구원")
-
-st.success(f"{best_agent}의 의견이 가장 중요합니다.")
-
-st.subheader("📋 HG Lab Core AI")
-
-if scores["병해충 연구원"] >= 80:
-    st.error("병해충 위험도가 높습니다. 즉시 방제를 검토하세요.")
-
-elif scores["환경 연구원"] >= 80:
-    st.warning("고온 스트레스가 의심됩니다.")
-
-else:
-    st.success("현재 농장 상태는 양호합니다.")
-
-    # 농장 상태
+    elif humidity > 90:
+        scores["관수 연구원"] += 30
+        st.write("💧 관수 연구원 : 과습 위험")
+    
+    # 양분 연구원
+    if symptom == "배꼽썩음":
+        scores["양분 연구원"] += 50
+        st.write("🧪 양분 연구원 : 칼슘 결핍 의심")
+    
+    # 경영 연구원
+    if scores["병해충 연구원"] >= 80:
+        scores["경영 연구원"] += 20
+        st.write("🧾 경영 연구원 : 방제 비용 증가 예상")
+       
+        # 환경 연구원
+        if temp >= 35:
+            scores["환경 연구원"] += 50
+            st.write("🌡️ 환경 연구원 : 고온 스트레스 가능성")
+    
+        # 병해충 연구원
+        if humidity >= 85:
+            scores["병해충 연구원"] += 50
+            st.write("🦠 병해충 연구원 : 고습 환경 병해 위험")
+    
+        # 증상 분석
+        if symptom == "노균병":
+            scores["병해충 연구원"] += 40
+            st.write("🍃 노균병 연구원 : 노균병 의심")
+    
+        elif symptom == "역병":
+            scores["병해충 연구원"] += 40
+            st.write("🍃 역병 연구원 : 역병 가능성")
+    
+        elif symptom == "흰가루병":
+            scores["병해충 연구원"] += 40
+            st.write("🍃 흰가루병 연구원 : 초기 방제 권장")
+    
+        elif symptom == "배꼽썩음":
+            scores["양분 연구원"] += 50
+            st.write("🥛 양분 연구원 : 칼슘 결핍 가능성")
+    
+        # 핵심 연구원
+        best_agent = max(scores, key=scores.get)
+    
+        st.write("")
+        st.write(f"🏆 핵심 연구원 : {best_agent}")
+    
+        # 점수 순위
+        rank_icons = ["🥇", "🥈", "🥉", "🏅", "🏅"]
+    
+    sorted_scores = sorted(
+        scores.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+    
+    for idx, (name, score) in enumerate(sorted_scores):
+        
+        st.write(f"{name} : {score}점")
+    
+    best_agent = sorted_scores[0][0]
+    
+    st.subheader("🏆 핵심 연구원")
+    
+    st.success(f"{best_agent}의 의견이 가장 중요합니다.")
+    
+    st.subheader("📋 HG Lab Core AI")
+    
+    if scores["병해충 연구원"] >= 80:
+        st.error("병해충 위험도가 높습니다. 즉시 방제를 검토하세요.")
+    
+    elif scores["환경 연구원"] >= 80:
+        st.warning("고온 스트레스가 의심됩니다.")
+    
+    else:
+        st.success("현재 농장 상태는 양호합니다.")
+    
+        # 농장 상태
+        st.subheader("📈 농장 상태")
+    
+        col1, col2, col3 = st.columns(3)
+    
+        with col1:
+            st.metric("건강점수", 82)
+    
+        with col2:
+            st.metric("위험도", 18)
+    
+        with col3:
+            st.metric("연구원 수", 5)
+    
+        st.subheader("🌱 HG Lab Core AI")
+        if symptom == "":
+            result = "증상을 입력해주세요."
+        else:
+            result = symptom
+    
+        st.success(f"최종 진단 : {result}")
+    
+    st.info(
+        f"""
+    📍 지역 : 충남 {region} {town}
+    
+    🌾 작물 : {crop}
+    
+    🌡 온도 : {temp}℃
+    
+    💧 습도 : {humidity}%
+    
+    🧠 핵심 연구원 : {best_agent}
+    
+    최종 판단 : {result}
+    """
+    )
+    
+    # 여기부터 추가
+    
+    st.subheader("📊 연구원 점수")
+    
+    scores = {
+        "환경 연구원": 85 if temp >= 35 else 60,
+        "관수 연구원": 80 if humidity < 50 else 65,
+        "양분 연구원": 75 if symptom == "배꼽썩음" else 50,
+        "병해 연구원": 90 if symptom == "노균병" else 55,
+        "경영 연구원": 70
+    }
+    
+    for name, score in sorted(scores.items(), key=lambda x:x[1], reverse=True):
+        st.write(f"🏅 {name} : {score}점")
+    
+    best_agent = max(scores, key=scores.get)
+    
+    st.subheader("🏆 핵심 연구원")
+    st.success(f"{best_agent}의 의견이 가장 중요합니다.")
+    
     st.subheader("📈 농장 상태")
-
+    
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
         st.metric("건강점수", 82)
-
+    
     with col2:
         st.metric("위험도", 18)
-
+    
     with col3:
         st.metric("연구원 수", 5)
-
-    st.subheader("🌱 HG Lab Core AI")
-    if symptom == "":
-        result = "증상을 입력해주세요."
-    else:
-        result = symptom
-
-    st.success(f"최종 진단 : {result}")
-
-st.info(
-    f"""
-📍 지역 : 충남 {region} {town}
-
-🌾 작물 : {crop}
-
-🌡 온도 : {temp}℃
-
-💧 습도 : {humidity}%
-
-🧠 핵심 연구원 : {best_agent}
-
-최종 판단 : {result}
-"""
-)
-
-# 여기부터 추가
-
-st.subheader("📊 연구원 점수")
-
-scores = {
-    "환경 연구원": 85 if temp >= 35 else 60,
-    "관수 연구원": 80 if humidity < 50 else 65,
-    "양분 연구원": 75 if symptom == "배꼽썩음" else 50,
-    "병해 연구원": 90 if symptom == "노균병" else 55,
-    "경영 연구원": 70
-}
-
-for name, score in sorted(scores.items(), key=lambda x:x[1], reverse=True):
-    st.write(f"🏅 {name} : {score}점")
-
-best_agent = max(scores, key=scores.get)
-
-st.subheader("🏆 핵심 연구원")
-st.success(f"{best_agent}의 의견이 가장 중요합니다.")
-
-st.subheader("📈 농장 상태")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric("건강점수", 82)
-
-with col2:
-    st.metric("위험도", 18)
-
-with col3:
-    st.metric("연구원 수", 5)
