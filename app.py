@@ -8,33 +8,136 @@ import pandas as pd
 st.set_page_config(
     page_title="HG Lab",
     page_icon="🌱",
-    layout="wide"
+    layout="centered"
 )
 
-st.title("🌱 HG Lab")
-st.caption("AI Cucumber Research Assistant")
+st.markdown("""
+<style>
+
+.main{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    color:#14532d;
+}
+
+h2{
+    color:#166534;
+}
+
+.stButton>button{
+    width:100%;
+    height:60px;
+    font-size:22px;
+    font-weight:bold;
+    border-radius:15px;
+    background:#166534;
+    color:white;
+}
+
+.stButton>button:hover{
+    background:#14532d;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div style="text-align:center; padding:20px;">
+
+<h1 style="font-size:60px;color:#14532d;margin-bottom:0;">
+🌱 HG Lab
+</h1>
+
+<h3 style="color:#4b5563;">
+AI Cucumber Intelligence Platform
+</h3>
+
+<p style="font-size:20px;color:#6b7280;">
+환경을 이해하고<br>
+병을 예측하며<br>
+농부의 의사결정을 돕는 AI 연구소
+</p>
+
+</div>
+""", unsafe_allow_html=True)
+
+col1,col2,col3=st.columns(3)
+
+with col1:
+    st.success("🟢 System Ready")
+
+with col2:
+    st.info("Version 2.0")
+
+with col3:
+    st.info("AI Researchers : 5")
 
 st.markdown("---")
 
-st.header("🥒 분석 작물")
+st.markdown("""
+<div style="background:#f0fdf4;
+padding:25px;
+border-radius:15px;
+text-align:center;
+margin-top:20px;
+">
 
-st.success("오이")
+<h2>🥒 분석 작물</h2>
+
+<h1 style="color:#166534;">
+오이
+</h1>
+
+</div>
+""",unsafe_allow_html=True)
 
 st.markdown("---")
 
-st.header("📁 환경데이터 업로드")
+st.markdown("""
+<div style="
+background:#f8fafc;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+margin-bottom:20px;
+">
+
+<h2>📁 Environment Data</h2>
+
+<p>최근 7일 또는 30일 환경데이터(CSV 또는 Excel)를 업로드하세요.</p>
+
+</div>
+""", unsafe_allow_html=True)
 
 env_file = st.file_uploader(
-    "최근 7일 또는 30일 환경데이터",
-    type=["csv", "xlsx"]
+    "",
+    type=["csv","xlsx"]
 )
 
 st.markdown("---")
 
-st.header("📷 잎 사진 업로드")
+st.markdown("""
+<div style="
+background:#f8fafc;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+margin-bottom:20px;
+">
+
+<h2>📷 Leaf Image</h2>
+
+<p>오이 잎 사진(JPG, PNG)을 업로드하세요.</p>
+
+</div>
+""", unsafe_allow_html=True)
 
 leaf_image = st.file_uploader(
-    "오이 잎 사진",
+    "",
     type=["jpg","jpeg","png"]
 )
 
