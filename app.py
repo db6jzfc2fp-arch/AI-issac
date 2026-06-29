@@ -153,6 +153,26 @@ st.markdown("---")
 analyze = st.button("🧠 AI 연구원 회의 시작")
 
 if analyze:
+    env_result = analyze_environment(crop, temp, humidity)
+
+    st.subheader("🌡️ Env-AI 환경 분석")
+
+st.metric(
+    "환경 위험도",
+    f"{env_result['risk_score']}점"
+)
+
+st.write("위험등급 :", env_result["risk_level"])
+
+st.write("### 분석 이유")
+
+for reason in env_result["reasons"]:
+    st.write("-", reason)
+
+    st.write("### 개선 방법")
+
+for tip in env_result["advice"]:
+    st.write("-", tip)
 
     # AI 연구원 실제 실행
     env_ai = EnvAI()
