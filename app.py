@@ -3,6 +3,11 @@ import pandas as pd
 import time
 import numpy as np
 
+from agents.env_ai import EnvAI
+from agents.patho_ai import PathoAI
+from agents.econ_ai import EconAI
+from agents.chief_ai import ChiefAI
+
 # ==========================
 # HG Lab
 # ==========================
