@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+
 disease_db = {
     "흰가루병": {
         "temp": (20, 28),
@@ -63,69 +65,36 @@ def calculate_risk(symptom, temp, humidity):
 st.title("🌱 HG Lab")
 st.caption("Multi-Agent Agricultural Research Lab")
 
-# 입력
-symptom = st.text_input("증상 입력")
+st.subheader("🥒 분석 작물")
 
-temp = st.number_input(
-    "온도 (℃)",
-    min_value=0,
-    max_value=50,
-    value=25
+st.success("오이")
+
+st.markdown("---")
+
+st.subheader("📂 환경데이터 업로드")
+
+uploaded_file = st.file_uploader(
+    "최근 7일 또는 30일 환경데이터(CSV 또는 Excel)",
+    type=["csv", "xlsx"]
 )
 
-humidity = st.number_input(
-    "습도 (%)",
-    min_value=0,
-    max_value=100,
-    value=70
-)
+if uploaded_file is not None:
 
-crop = st.selectbox(
-    "작물",
-    [
-        "오이"
-    ]
-)
+    if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_excel(uploaded_file)
 
-region = st.selectbox(
-    "충남 시군 선택",
-    [
-        "천안",
-        "아산",
-        "공주",
-        "보령",
-        "논산",
-        "계룡",
-        "당진",
-        "서산",
-        "태안",
-        "홍성",
-        "예산",
-        "청양",
-        "부여",
-        "서천",
-        "금산"
-    ]
-)
+    st.success("✅ 환경데이터를 성공적으로 불러왔습니다.")
 
-if region == "천안":
-    town = st.selectbox(
-        "천안 읍면 선택",
-        [
-            "성환읍",
-            "직산읍",
-            "성거읍",
-            "입장면",
-            "목천읍",
-            "병천면",
-            "수신면"
-        ]
-    )
-else:
-    town = "-"
+    st.subheader("📋 업로드 데이터")
+
+    st.dataframe(df.head())
+
+st.caption("💡 농장에서 내려받은 환경데이터를 업로드하면 AI가 자동으로 분석합니다.")
 
 # 진단 버튼
-if st.button("진단하기"):
+if st.button("🌱 환경데이터 분석 시작"):
 
     st.subheader("🧑‍🔬 연구원 회의")
 
