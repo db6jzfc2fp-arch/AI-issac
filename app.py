@@ -110,53 +110,39 @@ if st.button("🌱 환경데이터 분석 시작"):
     "병해충 연구원": 0,
     "경영 연구원": 0
 }
-    # 관수 연구원
-    if humidity < 50:
-        scores["관수 연구원"] += 30
-        st.write("💧 관수 연구원 : 수분 부족 가능성")
-    
-    elif humidity > 90:
-        scores["관수 연구원"] += 30
-        st.write("💧 관수 연구원 : 과습 위험")
-    
-    # 양분 연구원
-    if symptom == "배꼽썩음":
-        scores["양분 연구원"] += 50
-        st.write("🧪 양분 연구원 : 칼슘 결핍 의심")
-    
-    # 경영 연구원
-    if scores["병해충 연구원"] >= 80:
-        scores["경영 연구원"] += 20
-        st.write("🧾 경영 연구원 : 방제 비용 증가 예상")
-       
-        # 환경 연구원
-        if temp >= 35:
-            scores["환경 연구원"] += 50
-            st.write("🌡️ 환경 연구원 : 고온 스트레스 가능성")
-    
-        # 병해충 연구원
-        if humidity >= 85:
-            scores["병해충 연구원"] += 50
-            st.write("🦠 병해충 연구원 : 고습 환경 병해 위험")
-    
-        # 증상 분석
-        if symptom == "노균병":
-            scores["병해충 연구원"] += 40
-            st.write("🍃 노균병 연구원 : 노균병 의심")
-    
-        elif symptom == "역병":
-            scores["병해충 연구원"] += 40
-            st.write("🍃 역병 연구원 : 역병 가능성")
-    
-        elif symptom == "흰가루병":
-            scores["병해충 연구원"] += 40
-            st.write("🍃 흰가루병 연구원 : 초기 방제 권장")
-    
-        elif symptom == "배꼽썩음":
-            scores["양분 연구원"] += 50
-            st.write("🥛 양분 연구원 : 칼슘 결핍 가능성")
-    
-        # 핵심 연구원
+
+# 환경데이터 평균값 계산
+avg_temp = df["지온"].mean()
+
+st.write(f"평균 지온 : {avg_temp:.1f}℃")
+
+# 연구원 의견
+
+if avg_temp < 18:
+    scores["환경 연구원"] += 40
+    st.write("🌡 환경 연구원")
+    st.info("""
+최근 평균 지온이 매우 낮습니다.
+
+현재 오이는 생육이 느려질 가능성이 있으며
+뿌리 활력이 감소할 수 있습니다.
+
+보온 관리와 지온 상승이 필요합니다.
+""")
+
+elif avg_temp > 30:
+    scores["환경 연구원"] += 40
+    st.write("🌡 환경 연구원")
+    st.warning("""
+최근 평균 지온이 매우 높습니다.
+
+고온 스트레스로 인해
+생육 저하와 병 발생 가능성이 증가합니다.
+
+환기와 차광을 권장합니다.
+""")   
+        
+    # 핵심 연구원
         best_agent = max(scores, key=scores.get)
     
         st.write("")
