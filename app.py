@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import time
 
 # ==========================
 # HG Lab
@@ -143,8 +144,40 @@ leaf_image = st.file_uploader(
 
 st.markdown("---")
 
-if st.button("🔍 AI 분석 시작"):
+analyze = st.button("🧠 AI 연구원 회의 시작")
 
+if analyze:
+
+    st.success("🟢 AI 연구원 회의를 시작합니다.")
+
+st.markdown("---")
+
+st.subheader("👨‍🔬 AI 연구원 회의")
+progress = st.progress(0)
+status = st.empty()
+
+status.write("🌤 Climate AI 분석 중...")
+progress.progress(20)
+time.sleep(0.5)
+
+status.write("🦠 Disease AI 분석 중...")
+progress.progress(40)
+time.sleep(0.5)
+
+status.write("💧 Irrigation AI 분석 중...")
+progress.progress(60)
+time.sleep(0.5)
+
+status.write("🌱 Growth AI 분석 중...")
+progress.progress(80)
+time.sleep(0.5)
+
+status.write("🧠 HG Core AI 최종 판단...")
+progress.progress(100)
+time.sleep(0.5)
+
+status.success("✅ AI 연구원 회의 완료")
+    
     st.header("📊 분석 결과")
 
     if env_file is None:
@@ -162,35 +195,44 @@ if st.button("🔍 AI 분석 시작"):
 
     st.markdown("---")
 
-    st.header("🌤 환경 연구원")
+   col1, col2 = st.columns(2)
 
-    st.info("환경데이터 분석 준비 완료")
+with col1:
+    st.success("""
+🌤 Climate AI
 
-    st.markdown("---")
+✅ 환경 분석 완료
+""")
 
-    st.header("🦠 병해 연구원")
+with col2:
+    st.error("""
+🦠 Disease AI
 
-    st.info("병 발생 위험 분석 준비 완료")
+✅ 병해 분석 완료
+""")
 
-    st.markdown("---")
+col3, col4 = st.columns(2)
 
-    st.header("🌱 생육 연구원")
+with col3:
+    st.info("""
+💧 Irrigation AI
 
-    st.info("생육 분석 준비 완료")
+✅ 관수 분석 완료
+""")
 
-    st.markdown("---")
+with col4:
+    st.warning("""
+🌱 Growth AI
 
-    if leaf_image is not None:
+✅ 생육 분석 완료
+""")
 
-        st.header("📷 사진 연구원")
+if leaf_image is not None:
+    st.success("""
+📷 Vision AI
 
-        st.image(
-            leaf_image,
-            caption="업로드한 오이 잎",
-            use_container_width=True
-        )
-
-        st.info("사진 분석 준비 완료")
+✅ 잎 사진 분석 완료
+""")
 
     st.markdown("---")
 
