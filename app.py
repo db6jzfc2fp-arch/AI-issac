@@ -154,6 +154,26 @@ analyze = st.button("🧠 AI 연구원 회의 시작")
 
 if analyze:
 
+    # AI 연구원 실제 실행
+    env_ai = EnvAI()
+    patho_ai = PathoAI()
+    econ_ai = EconAI()
+    chief_ai = ChiefAI()
+
+    if env_file is None:
+        st.warning("환경데이터를 먼저 업로드하세요.")
+        st.stop()
+
+    if env_file.name.endswith(".csv"):
+        df = pd.read_csv(env_file)
+    else:
+        df = pd.read_excel(env_file)
+
+    env_result = env_ai.analyze_environment_data(df)
+    patho_result = patho_ai.analyze_image(leaf_image, env_result)
+    econ_result = econ_ai.calculate_profit()
+    chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
+    
     st.success("🟢 AI 연구원 회의를 시작합니다.")
 
 st.markdown("---")
