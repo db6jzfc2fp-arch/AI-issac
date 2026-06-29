@@ -178,24 +178,24 @@ time.sleep(0.5)
 
 status.success("✅ AI 연구원 회의 완료")
     
-    st.header("📊 분석 결과")
+st.header("📊 분석 결과")
 
-    if env_file is None:
-        st.warning("환경데이터를 먼저 업로드하세요.")
-        st.stop()
+if env_file is None:
+    st.warning("환경데이터를 먼저 업로드하세요.")
+    st.stop()
 
-    if env_file.name.endswith(".csv"):
-        df = pd.read_csv(env_file)
-    else:
-        df = pd.read_excel(env_file)
+if env_file.name.endswith(".csv"):
+    df = pd.read_csv(env_file)
+else:
+    df = pd.read_excel(env_file)
 
-    st.success("환경데이터를 불러왔습니다.")
+st.success("환경데이터를 불러왔습니다.")
 
-    st.dataframe(df.head())
+st.dataframe(df.head())
 
-    st.markdown("---")
+st.markdown("---")
 
-   col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
 with col1:
     st.success("""
