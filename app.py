@@ -171,7 +171,7 @@ if analyze:
 
     env_result = env_ai.analyze(df)
 
-    env_result = env_ai.analyze_environment_data(df)
+    env_result = env_ai.analyze(df)
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
     econ_result = econ_ai.calculate_profit()
     chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
