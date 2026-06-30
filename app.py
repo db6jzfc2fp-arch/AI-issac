@@ -172,9 +172,9 @@ if analyze:
     env_result = env_ai.analyze(df)
 
     env_result = env_ai.analyze(df)
-    patho_result = patho_ai.analyze_image(leaf_image, env_result)
-    econ_result = econ_ai.calculate_profit()
-    chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
+    #patho_result = patho_ai.analyze_image(leaf_image, env_result)
+    #econ_result = econ_ai.calculate_profit()
+    #chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
     
     st.success("🟢 AI 연구원 회의를 시작합니다.")
 
