@@ -2,6 +2,8 @@ class EnvAI:
 
     def analyze(self, df):
         return {
+            "avg_temp": 0,
+            "avg_humidity": 0,            
             "risk_score": 50,
             "risk_level": "주의",
             "reasons": [
