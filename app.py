@@ -366,8 +366,8 @@ Chief-AI 종합판단 완료
 """)
 
     st.markdown("---")
-    st.success("환경데이터를 불러왔습니다.")
-    st.dataframe(df.head())
+    #st.success("환경데이터를 불러왔습니다.")
+    #st.dataframe(df.head())
 
 else:
     st.info("환경데이터를 업로드한 뒤 AI 연구원 회의를 시작하세요.")
