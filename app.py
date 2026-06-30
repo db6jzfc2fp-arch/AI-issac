@@ -171,24 +171,24 @@ if analyze:
 
     st.write(df.columns)
     
-    env_result = env_ai.analyze(df)
-   
-    st.success("🌤 Env-AI 환경 분석 완료")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.metric("🌡️ 평균 내부온도", f"{env_result['avg_temp']}℃")
-
-with col2:
-    st.metric("💧 평균 내부습도", f"{env_result['avg_humidity']}%")
-
-st.metric("⚠️ 환경 위험도", f"{env_result['risk_score']}%")
-st.write("위험등급 :", env_result["risk_level"])
-
-st.write("### 분석 이유")
-for reason in env_result["reasons"]:
-    st.write("-", reason)
+        env_result = env_ai.analyze(df)
+       
+        st.success("🌤 Env-AI 환경 분석 완료")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric("🌡️ 평균 내부온도", f"{env_result['avg_temp']}℃")
+    
+    with col2:
+        st.metric("💧 평균 내부습도", f"{env_result['avg_humidity']}%")
+    
+    st.metric("⚠️ 환경 위험도", f"{env_result['risk_score']}%")
+    st.write("위험등급 :", env_result["risk_level"])
+    
+    st.write("### 분석 이유")
+    for reason in env_result["reasons"]:
+        st.write("-", reason)
 
 st.write("### 개선 방법")
 for tip in env_result["advice"]:
