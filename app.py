@@ -172,11 +172,11 @@ if analyze:
     env_result = env_ai.analyze(df)
     st.success("🌤 Env-AI 환경 분석 완료")
 
-st.write("### 🌡️ 평균 온도")
-st.write(env_result["avg_temp"])
+    st.write("### 🌡️ 평균 온도")
+    st.write(env_result["avg_temp"])
 
-st.write("### 💧 평균 습도")
-st.write(env_result["avg_humidity"])
+    st.write("### 💧 평균 습도")
+    st.write(env_result["avg_humidity"])
 #patho_result = patho_ai.analyze_image(leaf_image, env_result)
 #econ_result = econ_ai.calculate_profit()
 #chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
