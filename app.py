@@ -227,7 +227,7 @@ time.sleep(0.5)
 
 status.success("✅ AI 연구원 회의 완료")
         
-    st.markdown("---")
+st.markdown("----")
     st.subheader("🧑‍🔬 AI 연구원 회의")
     
     with st.expander("🛰️ Env-AI 발표", expanded=True):
