@@ -169,6 +169,8 @@ if analyze:
     else:
         df = pd.read_excel(env_file)
 
+    st.write(df.columns)
+    
     env_result = env_ai.analyze(df)
     st.success("🌤 Env-AI 환경 분석 완료")
 
