@@ -170,8 +170,13 @@ if analyze:
         df = pd.read_excel(env_file)
 
     env_result = env_ai.analyze(df)
+    st.success("🌤 Env-AI 환경 분석 완료")
 
-    env_result = env_ai.analyze(df)
+st.write("### 🌡️ 평균 온도")
+st.write(env_result["avg_temp"])
+
+st.write("### 💧 평균 습도")
+st.write(env_result["avg_humidity"])
     #patho_result = patho_ai.analyze_image(leaf_image, env_result)
     #econ_result = econ_ai.calculate_profit()
     #chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
@@ -420,6 +425,8 @@ if env_file.name.endswith(".csv"):
     df = pd.read_csv(env_file)
 else:
     df = pd.read_excel(env_file)
+
+st.write(df.columns)
 
 st.success("환경데이터를 불러왔습니다.")
 
