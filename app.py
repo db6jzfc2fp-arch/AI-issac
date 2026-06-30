@@ -171,9 +171,9 @@ if analyze:
 
     st.write(df.columns)
     
-        env_result = env_ai.analyze(df)
+    env_result = env_ai.analyze(df)
        
-        st.success("🌤 Env-AI 환경 분석 완료")
+    st.success("🌤 Env-AI 환경 분석 완료")
     
     col1, col2 = st.columns(2)
     
@@ -190,22 +190,22 @@ if analyze:
     for reason in env_result["reasons"]:
         st.write("-", reason)
 
-st.write("### 개선 방법")
-for tip in env_result["advice"]:
-    st.write("-", tip)
-#patho_result = patho_ai.analyze_image(leaf_image, env_result)
-#econ_result = econ_ai.calculate_profit()
-#chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
-    
-    st.success("🟢 AI 연구원 회의를 시작합니다.")
-    
-    st.markdown("---")
-    
-    st.subheader("👨‍🔬 AI 연구원 회의")
-    progress = st.progress(0)
-    status = st.empty()
-    
-    status.write("🌤 Climate AI 분석 중...")
+    st.write("### 개선 방법")
+    for tip in env_result["advice"]:
+        st.write("-", tip)
+    #patho_result = patho_ai.analyze_image(leaf_image, env_result)
+    #econ_result = econ_ai.calculate_profit()
+    #chief_result = chief_ai.make_decision(env_result, patho_result, econ_result)
+        
+        st.success("🟢 AI 연구원 회의를 시작합니다.")
+        
+        st.markdown("---")
+        
+        st.subheader("👨‍🔬 AI 연구원 회의")
+        progress = st.progress(0)
+        status = st.empty()
+        
+        status.write("🌤 Climate AI 분석 중...")
     progress.progress(20)
     time.sleep(0.5)
     
