@@ -5,7 +5,7 @@ class EnvAI:
     def analyze(self, df):
 
         # 숫자 변환
-        internal_temp = pd.to_numeric(df["온도 내부"], errors="coerce")
+        internal_temp = pd.to_numeric(df["온도 외부"], errors="coerce")
         humidity = pd.to_numeric(df["상대 습도 내부"], errors="coerce")
         outside_temp = pd.to_numeric(df["온도 외부"], errors="coerce")
         wind_speed = pd.to_numeric(df["풍속 외부"], errors="coerce")
