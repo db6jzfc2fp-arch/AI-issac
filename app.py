@@ -201,32 +201,32 @@ if analyze:
         
         st.markdown("---")
         
-        st.subheader("👨‍🔬 AI 연구원 회의")
-        progress = st.progress(0)
-        status = st.empty()
+st.subheader("👨‍🔬 AI 연구원 회의")
+progress = st.progress(0)
+status = st.empty()
+
+status.write("🌤 Climate AI 분석 중...")
+progress.progress(20)
+time.sleep(0.5)
+
+status.write("🦠 Disease AI 분석 중...")
+progress.progress(40)
+time.sleep(0.5)
+
+status.write("💧 Irrigation AI 분석 중...")
+progress.progress(60)
+time.sleep(0.5)
+
+status.write("🌱 Growth AI 분석 중...")
+progress.progress(80)
+time.sleep(0.5)
+
+status.write("🧠 HG Core AI 최종 판단...")
+progress.progress(100)
+time.sleep(0.5)
+
+status.success("✅ AI 연구원 회의 완료")
         
-        status.write("🌤 Climate AI 분석 중...")
-    progress.progress(20)
-    time.sleep(0.5)
-    
-    status.write("🦠 Disease AI 분석 중...")
-    progress.progress(40)
-    time.sleep(0.5)
-    
-    status.write("💧 Irrigation AI 분석 중...")
-    progress.progress(60)
-    time.sleep(0.5)
-    
-    status.write("🌱 Growth AI 분석 중...")
-    progress.progress(80)
-    time.sleep(0.5)
-    
-    status.write("🧠 HG Core AI 최종 판단...")
-    progress.progress(100)
-    time.sleep(0.5)
-    
-    status.success("✅ AI 연구원 회의 완료")
-    
     st.markdown("---")
     st.subheader("🧑‍🔬 AI 연구원 회의")
     
