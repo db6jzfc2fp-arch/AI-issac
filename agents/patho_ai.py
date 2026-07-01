@@ -36,12 +36,16 @@ class PathoAI:
             risk = "중간"
             recommendation = "잎 영역이 충분히 감지되지 않았습니다. 잎이 화면에 크게 나오도록 다시 촬영하세요."
 
-        elif downy_ratio >= 1.5 and humidity >= 70:
+        elif downy_ratio >= 6 and green_ratio < 70:
             disease = "노균병 의심"
             probability = min(90, int(45 + downy_ratio * 8))
+        
+            if humidity >= 70:
+                probability = min(90, probability + 10)
+        
             risk = "높음" if probability >= 70 else "중간"
-            recommendation = "노란 병반과 높은 습도가 감지됩니다. 노균병 가능성이 있으므로 환기와 제습을 강화하세요."
-
+            recommendation = "노란 병반이 감지됩니다. 습도가 높으면 노균병 가능성이 커지므로 환기와 제습을 강화하세요."
+        
         elif powdery_ratio >= 6 and downy_ratio < 4:
             disease = "흰가루병 의심"
             probability = min(90, int(40 + powdery_ratio * 7))
@@ -66,6 +70,11 @@ class PathoAI:
             risk = "낮음"
             recommendation = "현재 사진과 환경 기준으로 병해 위험은 낮습니다."
 
+        print("powdery_ratio:", powdery_ratio)
+        print("downy_ratio:", downy_ratio)
+        print("brown_ratio:", brown_ratio)
+        print("green_ratio:", green_ratio)
+        
         return {
             "disease": disease,
             "probability": probability,
