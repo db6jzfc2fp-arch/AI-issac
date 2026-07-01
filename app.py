@@ -175,6 +175,18 @@ if analyze:
         st.stop()
 
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
+    
+    final_risk_score = max(
+    env_result["risk_score"],
+    patho_result["probability"]
+)
+
+if final_risk_score >= 70:
+    final_risk_level = "높음"
+elif final_risk_score >= 40:
+    final_risk_level = "주의"
+else:
+    final_risk_level = "안정"
 
     st.success("🌤 Env-AI 환경 분석 완료")
     col1, col2 = st.columns(2)
@@ -350,8 +362,13 @@ Env-AI 분석 결과를 우선 종합합니다.
 
 AI 책임연구원
 
-현재 판단
-Env-AI 결과 기준으로 환경 위험도를 판단했습니다.
+현재 판단 Env-AI와 Patho-AI 결과를 종합했습니다.
+
+환경 위험도: {env_result['risk_score']}%
+
+병해 위험도: {patho_result['probability']}%
+
+최종 위험등급: {final_risk_level}
 
 최종 위험등급: {env_result['risk_level']}
 """)
@@ -364,12 +381,12 @@ if analyze:
 ## 📋 오늘의 최종 의사결정
 
 🌡️ 환경 위험도
-{env_result['risk_score']}%
+{final_risk_score}%
 
 ━━━━━━━━━━━━━━━━━━
 
 🟡 최종 위험등급
-{env_result['risk_level']}
+{final_risk_level}
 
 ━━━━━━━━━━━━━━━━━━
 
