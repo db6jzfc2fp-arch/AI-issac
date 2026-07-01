@@ -330,14 +330,6 @@ with col2:
 🟢 Vision 분석 완료
 """)
 
-병해충 전문 연구원
-
-현재 상태
-🟡 Day2 연결 예정
-
-Vision 모델 대기
-""")
-
     col3, col4 = st.columns(2)
 
     with col3:
