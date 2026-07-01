@@ -398,8 +398,10 @@ Chief-AI 종합판단 완료
         st.write(f"• {tip}")
 
     if patho_result["probability"] >= 70:
-        st.write("• 병든 잎을 제거하세요.")
-        st.write("• 환기를 강화하세요.")
+    st.write("• 병든 잎을 제거하세요.")
+    st.write("• 환기를 강화하세요.")
+    else:
+        st.write("• 현재 추가적인 병해 조치는 필요하지 않습니다.")
 
     st.markdown("---")
     #st.success("환경데이터를 불러왔습니다.")
