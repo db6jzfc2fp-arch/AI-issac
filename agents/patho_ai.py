@@ -56,6 +56,11 @@ class PathoAI:
 
         elif humidity >= 88:
             disease = "노균병 환경 위험"
+        elif env_result["avg_temp"] >= 28 and green_ratio < 35:
+            disease = "시들음병 의심"
+            probability = 72
+            risk = "높음"
+            recommendation = "고온 환경에서 잎의 녹색 영역이 감소했습니다. 시들음병 또는 생육 스트레스 가능성이 있으므로 뿌리 상태와 관수 상태를 확인하세요."
             probability = 65
             risk = "중간"
             recommendation = "사진상 뚜렷한 병반은 적지만 내부 습도가 높아 노균병 위험이 있습니다. 환기와 제습을 강화하세요."
