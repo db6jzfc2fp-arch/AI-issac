@@ -2,7 +2,7 @@ class PathoAI:
 
     def analyze_image(self, image, env_result):
 
-        if env_result["humidity"] >= 85:
+        if env_result["avg_humidity"] >= 85:
             disease = "노균병 의심"
             probability = 82
             risk = "높음"
