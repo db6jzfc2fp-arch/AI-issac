@@ -171,8 +171,8 @@ if analyze:
     env_result = env_ai.analyze(df)
 
     if leaf_image is None:
-    st.warning("잎 사진을 먼저 업로드하세요.")
-    st.stop()
+        st.warning("잎 사진을 먼저 업로드하세요.")
+        st.stop()
 
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
 
