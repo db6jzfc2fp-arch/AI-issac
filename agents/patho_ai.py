@@ -26,21 +26,21 @@ class PathoAI:
         humidity = env_result["avg_humidity"]
 
         # 1. 흰가루병: 잎 표면의 흰/회백색 반점
-        if white_ratio >= 3:
+        if white_ratio >= 0.8:
             disease = "흰가루병 의심"
             probability = min(95, int(45 + white_ratio * 8))
             risk = "높음" if probability >= 70 else "중간"
             recommendation = "잎 표면에 흰색 또는 회백색 병징이 감지됩니다. 흰가루병 가능성이 있으므로 병든 잎을 확인하고 방제 여부를 검토하세요."
 
         # 2. 노균병: 고습도 + 노란 병반
-        elif humidity >= 80 and yellow_ratio >= 2:
+        elif humidity >= 75 and yellow_ratio >= 0.8:
             disease = "노균병 의심"
             probability = min(92, int(50 + yellow_ratio * 8))
             risk = "높음" if probability >= 70 else "중간"
             recommendation = "습도가 높고 노란 병반이 감지됩니다. 노균병 가능성이 있으므로 환기를 강화하고 잎 표면의 물기를 줄이세요."
 
         # 3. 갈변/괴사 의심
-        elif brown_ratio >= 4:
+        elif brown_ratio >= 1.5:
             disease = "갈변 또는 괴사 의심"
             probability = min(85, int(40 + brown_ratio * 7))
             risk = "중간"
