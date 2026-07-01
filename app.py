@@ -170,8 +170,13 @@ if analyze:
 
     env_result = env_ai.analyze(df)
 
-    st.success("🌤 Env-AI 환경 분석 완료")
+    if leaf_image is None:
+    st.warning("잎 사진을 먼저 업로드하세요.")
+    st.stop()
 
+    patho_result = patho_ai.analyze_image(leaf_image, env_result)
+
+    st.success("🌤 Env-AI 환경 분석 완료")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -239,18 +244,19 @@ if analyze:
 {env_result['reasons'][0]}
 """)
 
-    with st.expander("🦠 Patho-AI 발표"):
-        st.error("""
-### 병해충 전문 연구원
+with st.expander("🦠 Patho-AI 발표"):
+    st.error(f"""
+### 🦠 병해충 전문 연구원
 
-▶ Vision-LLM 이미지 분석 대기
+▶ 진단 결과 : {patho_result['disease']}
 
-• 노균병 위험도 계산 예정
-• 흰가루병 위험도 계산 예정
-• 해충 발생 위험도 계산 예정
+▶ 발생 확률 : {patho_result['probability']}%
 
-📢 의견  
-잎 사진 분석은 Day2에서 연결 예정입니다.
+▶ 위험도 : {patho_result['risk']}
+
+📢 의견
+
+{patho_result['recommendation']}
 """)
 
     with st.expander("💰 Econ-AI 발표"):
