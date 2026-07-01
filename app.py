@@ -379,7 +379,7 @@ if analyze:
     st.success(f"""
 ## 📋 오늘의 최종 의사결정
 
-🌡️ 환경 위험도
+🎯 종합 위험도
 {final_risk_score}%
 
 ━━━━━━━━━━━━━━━━━━
