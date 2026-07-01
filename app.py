@@ -345,25 +345,26 @@ Env-AI 결과 기준으로 환경 위험도를 판단했습니다.
     st.markdown("---")
     st.subheader("🏆 HG Lab 최종 행동지침")
 
-    st.success(f"""
+st.success(f"""
 ## 📋 오늘의 최종 의사결정
 
-🌡️ 환경 위험도  
+🌡️ 환경 위험도
 {env_result['risk_score']}%
 
 ━━━━━━━━━━━━━━━━━━
-""")
 
-    for tip in env_result["advice"]:
-        st.write("✅", tip)
+🟡 최종 위험등급
+{env_result['risk_level']}
 
-    st.success(f"""
 ━━━━━━━━━━━━━━━━━━
-
-🟡 최종 위험등급 : {env_result['risk_level']}
 
 Chief-AI 종합판단 완료
 """)
+
+st.write("### ✅ 권장 조치")
+
+for tip in env_result["advice"]:
+    st.write(f"• {tip}")
 
     st.markdown("---")
     #st.success("환경데이터를 불러왔습니다.")
