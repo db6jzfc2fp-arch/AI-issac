@@ -37,13 +37,13 @@ class PathoAI:
         humidity = env_result["avg_humidity"]
 
         # 병해 판단
-        if downy_ratio >= 2 and humidity >= 70:
+        if downy_ratio >= 6 and humidity >= 85:
             disease = "노균병 의심"
             probability = min(95, int(50 + downy_ratio * 10 + (humidity - 70) * 0.5))
             risk = "높음" if probability >= 70 else "중간"
             recommendation = "노란 병반과 높은 습도가 함께 감지됩니다. 노균병 가능성이 있으므로 환기를 강화하고 잎 표면의 물기를 줄이세요."
 
-        elif powdery_ratio >= 1.5:
+        elif powdery_ratio >= 3:
             disease = "흰가루병 의심"
             probability = min(95, int(45 + powdery_ratio * 12))
             risk = "높음" if probability >= 70 else "중간"
