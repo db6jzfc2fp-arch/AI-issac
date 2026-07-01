@@ -244,8 +244,9 @@ if analyze:
 {env_result['reasons'][0]}
 """)
 
-with st.expander("🦠 Patho-AI 발표"):
-    st.error(f"""
+if analyze:
+    with st.expander("🦠 Patho-AI 발표"):
+        st.error(f"""
 ### 🦠 병해충 전문 연구원
 
 ▶ 진단 결과 : {patho_result['disease']}
