@@ -365,7 +365,7 @@ Chief-AI 종합판단 완료
     st.write("### ✅ 권장 조치")
 
     for tip in env_result["advice"]:
-    st.write(f"• {tip}")
+        st.write(f"• {tip}")
 
     st.markdown("---")
     #st.success("환경데이터를 불러왔습니다.")
