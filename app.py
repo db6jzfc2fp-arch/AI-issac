@@ -370,7 +370,6 @@ AI 책임연구원
 
 최종 위험등급: {final_risk_level}
 
-최종 위험등급: {env_result['risk_level']}
 """)
 
 if analyze:    
