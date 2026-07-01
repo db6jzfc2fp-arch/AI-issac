@@ -311,9 +311,24 @@ Env-AI 분석 결과를 우선 종합합니다.
 위험등급: {env_result['risk_level']}
 """)
 
-    with col2:
-        st.error("""
+with col2:
+    st.error(f"""
 🦠 Patho-AI
+
+병해충 전문 연구원
+
+진단 결과
+{patho_result['disease']}
+
+발생 확률
+{patho_result['probability']}%
+
+위험도
+{patho_result['risk']}
+
+현재 상태
+🟢 Vision 분석 완료
+""")
 
 병해충 전문 연구원
 
