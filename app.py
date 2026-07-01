@@ -177,17 +177,17 @@ if analyze:
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
     
     final_risk_score = max(
-    env_result["risk_score"],
-    patho_result["probability"]
-)
+        env_result["risk_score"],
+        patho_result["probability"]
+    )
 
-if final_risk_score >= 70:
-    final_risk_level = "높음"
-elif final_risk_score >= 40:
-    final_risk_level = "주의"
-else:
-    final_risk_level = "안정"
-
+    if final_risk_score >= 70:
+        final_risk_level = "높음"
+    elif final_risk_score >= 40:
+        final_risk_level = "주의"
+    else:
+        final_risk_level = "안정"
+    
     st.success("🌤 Env-AI 환경 분석 완료")
     col1, col2 = st.columns(2)
 
