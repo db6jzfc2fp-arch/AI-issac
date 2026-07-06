@@ -187,13 +187,12 @@ patho_result = {
     "recommendation": "잎 사진 업로드 후 분석을 실행하세요."
 }
 
+env_ai = EnvAI()
+patho_ai = PathoAI()
+econ_ai = EconAI()
+chief_ai = ChiefAI()
+
 if analyze:
-
-    env_ai = EnvAI()
-    patho_ai = PathoAI()
-    econ_ai = EconAI()
-    chief_ai = ChiefAI()
-
     if env_file is None:
         st.warning("환경데이터를 먼저 업로드하세요.")
         st.stop()
