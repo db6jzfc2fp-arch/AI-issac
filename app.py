@@ -153,6 +153,23 @@ st.markdown("---")
 
 analyze = st.button("🧠 AI 연구원 회의 시작")
 
+econ_result = {
+    "production_kg": 1000,
+    "market_price": 2600,
+    "gross_revenue": 2600000,
+    "loss_rate": 0,
+    "expected_loss": 0,
+    "treatment_cost": 50000,
+    "profit_without_treatment": 2600000,
+    "profit_with_treatment": 2550000,
+    "benefit": -50000,
+    "strategy": "AI 연구원 회의 전 기본 경제성 분석값입니다.",
+    "market_strategy": "시장 분석 대기"
+}
+
+final_risk_score = 0
+final_risk_level = "안정"
+
 if analyze:
 
     env_ai = EnvAI()
