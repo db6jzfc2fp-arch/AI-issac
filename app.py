@@ -222,7 +222,7 @@ if analyze:
         final_risk_level = "안정"
 
     if patho_result["probability"] >= 70:
-    chief_comment = "병해 위험도가 높게 나타났습니다. 즉시 병든 잎 제거와 환기 강화가 필요합니다."
+        chief_comment = "병해 위험도가 높게 나타났습니다. 즉시 병든 잎 제거와 환기 강화가 필요합니다."
     elif env_result["risk_score"] >= 70:
         chief_comment = "환경 위험도가 높게 나타났습니다. 온습도와 환기 상태를 우선 점검해야 합니다."
     elif econ_result["benefit"] > 0:
