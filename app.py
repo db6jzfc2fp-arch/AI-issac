@@ -298,23 +298,19 @@ except Exception as e:
     st.markdown("---")
     st.subheader("🧑‍🔬 AI 연구원 회의")
 
-    with st.expander("🛰️ Env-AI 발표", expanded=True):
+if analyze:
+    with st.expander("🌿 Env-AI 발표", expanded=True):
         st.success(f"""
 ### 기상·환경 전문 연구원
-
-▶ 평균 내부온도: {env_result['avg_temp']}℃
-
-▶ 평균 내부습도: {env_result['avg_humidity']}%
-
-▶ 환경 위험도: {env_result['risk_score']}%
-
-▶ 위험등급: {env_result['risk_level']}
-
-📢 의견  
-{env_result['reasons'][0]}
-""")
-
-if analyze:
+    
+    ▶ 평균 내부온도: {env_result['avg_temp']}℃
+    ▶ 평균 내부습도: {env_result['avg_humidity']}%
+    ▶ 환경 위험도: {env_result['risk_score']}%
+    ▶ 위험등급: {env_result['risk_level']}
+    
+    📢 의견
+    {env_result['reasons'][0]}
+    """)    
     with st.expander("🦠 Patho-AI 발표"):
         st.error(f"""
 ### 🦠 병해충 전문 연구원
