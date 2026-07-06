@@ -221,6 +221,15 @@ if analyze:
     else:
         final_risk_level = "안정"
 
+    if patho_result["probability"] >= 70:
+    chief_comment = "병해 위험도가 높게 나타났습니다. 즉시 병든 잎 제거와 환기 강화가 필요합니다."
+    elif env_result["risk_score"] >= 70:
+        chief_comment = "환경 위험도가 높게 나타났습니다. 온습도와 환기 상태를 우선 점검해야 합니다."
+    elif econ_result["benefit"] > 0:
+        chief_comment = "방제 후 경제적 이익이 예상됩니다. 방제 후 안정 출하 전략이 유리합니다."
+    else:
+        chief_comment = "현재 위험도는 낮습니다. 기존 관리 상태를 유지하면서 정기 점검을 권장합니다."
+
     try:
         econ_result = econ_ai.analyze(
             production_kg=1000,
@@ -349,9 +358,7 @@ Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 
 ### 최종 판단
 
-현재 병해 위험도가 가장 크게 작용했습니다.  
-환경은 안정적이지만, 잎 이미지 분석에서 병해 가능성이 높게 나타났으므로  
-즉시 병든 잎 제거와 환기 강화가 필요합니다.
+{chief_comment}
 
 ### 최종 위험등급
 
