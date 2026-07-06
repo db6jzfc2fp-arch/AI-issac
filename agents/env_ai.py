@@ -79,6 +79,11 @@ class EnvAI:
         else:
             risk_level = "안정"
 
+        if not advice:
+            advice.append("현재 환경은 전반적으로 안정적입니다. 현재 관리 상태를 유지하세요.")
+            advice.append("주기적으로 온도·습도·병해 상태를 확인하세요.")
+            advice.append("외부 풍속이 낮을 경우 환기 타이밍을 점검하세요.")
+        
         return {
             "avg_temp": avg_temp,
             "avg_outside_temp": avg_outside_temp,
