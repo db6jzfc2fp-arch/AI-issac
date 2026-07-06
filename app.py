@@ -332,15 +332,30 @@ if analyze:
 {econ_result['market_strategy']}
 """)
 
-    with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
-        st.warning(f"""
+with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
+st.warning(f"""
 ### AI 책임연구원
 
 Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 
 ✔ 환경 위험도: {env_result['risk_score']}%  
 ✔ 병해 위험도: {patho_result['probability']}%  
-✔ 최종 위험등급: {final_risk_level}
+✔ 예상 손실률: {econ_result['loss_rate']}%  
+✔ 예상 손실액: {econ_result['expected_loss']:,}원  
+✔ 방제 비용: {econ_result['treatment_cost']:,}원  
+✔ 경제적 효과: {econ_result['benefit']:,}원  
+
+---
+
+### 최종 판단
+
+현재 병해 위험도가 가장 크게 작용했습니다.  
+환경은 안정적이지만, 잎 이미지 분석에서 병해 가능성이 높게 나타났으므로  
+즉시 병든 잎 제거와 환기 강화가 필요합니다.
+
+### 최종 위험등급
+
+{final_risk_level}
 
 최종 판단 생성 완료
 """)
