@@ -229,7 +229,12 @@ if analyze:
         chief_comment = "방제 후 경제적 이익이 예상됩니다. 방제 후 안정 출하 전략이 유리합니다."
     else:
         chief_comment = "현재 위험도는 낮습니다. 기존 관리 상태를 유지하면서 정기 점검을 권장합니다."
-
+    
+    econ_comment = (
+    f"Econ-AI는 '{econ_result['best_scenario']}' 전략이 가장 유리하다고 판단했습니다. "
+    f"경제적 효과는 {econ_result['benefit']:,}원입니다."
+    )
+    
     try:
         econ_result = econ_ai.analyze(
             production_kg=1000,
@@ -375,6 +380,8 @@ Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 ### 최종 판단
 
 {chief_comment}
+
+{econ_comment}
 
 ### 최종 위험등급
 
