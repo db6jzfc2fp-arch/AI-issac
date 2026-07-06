@@ -1,3 +1,4 @@
+from agents.econ_ai import EconAI
 import streamlit as st
 import pandas as pd
 import time
@@ -181,6 +182,14 @@ if analyze:
         patho_result["probability"]
     )
 
+    econ_result = econ_ai.analyze(
+    production_kg=1000,
+    market_price=2600,
+    disease_risk=patho_result.get("risk_score", patho_result.get("probability", 0)),
+    env_risk=env_result.get("risk_score", 0),
+    treatment_cost=50000
+    )
+
     if final_risk_score >= 70:
         final_risk_level = "높음"
     elif final_risk_score >= 40:
@@ -272,18 +281,25 @@ if analyze:
 {patho_result['recommendation']}
 """)
 
-    with st.expander("💰 Econ-AI 발표"):
-        st.info("""
+with st.expander("💰 Econ-AI 발표"):
+    st.info(f"""
 ### 경영·유통 전문 연구원
 
-▶ 시장 분석 대기
-
-• 예상 수확량 계산 예정
-• 운송비 계산 예정
-• 예상 판매가격 계산 예정
+▶ 예상 생산량: {econ_result['production_kg']:,}kg  
+▶ 기준 시장가격: {econ_result['market_price']:,}원/kg  
+▶ 예상 총매출: {econ_result['gross_revenue']:,}원  
+▶ 예상 손실률: {econ_result['loss_rate']}%  
+▶ 예상 손실액: {econ_result['expected_loss']:,}원  
+▶ 방제 비용: {econ_result['treatment_cost']:,}원  
+▶ 방제 전 순이익: {econ_result['profit_without_treatment']:,}원  
+▶ 방제 후 순이익: {econ_result['profit_with_treatment']:,}원  
+▶ 경제적 효과: {econ_result['benefit']:,}원  
 
 📢 의견  
-경제성 분석은 Day3에서 연결 예정입니다.
+{econ_result['strategy']}
+
+📦 출하 전략  
+{econ_result['market_strategy']}
 """)
 
     with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
