@@ -333,7 +333,7 @@ if analyze:
 """)
 
 with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
-st.warning(f"""
+    st.warning(f"""
 ### AI 책임연구원
 
 Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
