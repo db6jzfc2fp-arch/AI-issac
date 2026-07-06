@@ -85,3 +85,14 @@ class EconAI:
             "strategy": strategy,
             "market_strategy": market_strategy
         }
+
+if __name__ == "__main__":
+    econ = EconAI()
+    result = econ.analyze(
+        production_kg=1000,
+        market_price=2600,
+        disease_risk=85,
+        env_risk=70,
+        treatment_cost=50000
+    )
+    print(result)
