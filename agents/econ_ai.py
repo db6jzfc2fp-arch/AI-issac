@@ -7,65 +7,55 @@ class EconAI:
         env_risk=0,
         treatment_cost=50000
     ):
-        """
-        production_kg: 예상 생산량(kg)
-        market_price: kg당 시장 가격(원)
-        disease_risk: 병해 위험도(0~100)
-        env_risk: 환경 위험도(0~100)
-        treatment_cost: 방제 비용(원)
-        """
-
-        # 1. 기본 매출
         gross_revenue = production_kg * market_price
 
-        # 2. 병해/환경 위험에 따른 예상 손실률
-        loss_rate = 0
+        base_loss_rate = min(
+            disease_risk * 0.22 + env_risk * 0.08,
+            45
+        )
 
-        if disease_risk >= 80:
-            loss_rate += 0.20
-        elif disease_risk >= 60:
-            loss_rate += 0.12
-        elif disease_risk >= 40:
-            loss_rate += 0.07
-        elif disease_risk >= 20:
-            loss_rate += 0.03
+        scenarios = []
 
-        if env_risk >= 80:
-            loss_rate += 0.10
-        elif env_risk >= 60:
-            loss_rate += 0.06
-        elif env_risk >= 40:
-            loss_rate += 0.03
+        plans = [
+            ("즉시 방제", 0.35, treatment_cost, "추천"),
+            ("2일 관찰 후 방제", 0.55, int(treatment_cost * 0.9), "조건부"),
+            ("방제하지 않음", 1.0, 0, "비추천")
+        ]
 
-        # 최대 손실률 제한
-        loss_rate = min(loss_rate, 0.45)
+        for name, loss_multiplier, cost, label in plans:
+            loss_rate = base_loss_rate * loss_multiplier
+            expected_loss = int(gross_revenue * loss_rate / 100)
+            profit = gross_revenue - expected_loss - cost
 
-        # 3. 예상 손실
-        expected_loss = int(gross_revenue * loss_rate)
+            scenarios.append({
+                "name": name,
+                "loss_rate": round(loss_rate, 1),
+                "expected_loss": expected_loss,
+                "treatment_cost": cost,
+                "profit": int(profit),
+                "label": label
+            })
 
-        # 4. 방제 후 손실 감소 효과
-        reduced_loss = int(expected_loss * 0.35)
-        saved_loss = expected_loss - reduced_loss
+        best = max(scenarios, key=lambda x: x["profit"])
 
-        # 5. 방제했을 때 순이익 / 안 했을 때 순이익
-        profit_without_treatment = gross_revenue - expected_loss
-        profit_with_treatment = gross_revenue - reduced_loss - treatment_cost
-
-        # 6. 방제 경제성
+        profit_without_treatment = scenarios[2]["profit"]
+        profit_with_treatment = scenarios[0]["profit"]
         benefit = profit_with_treatment - profit_without_treatment
 
-        if benefit > 0:
-            decision = "방제 후 출하 권장"
-            strategy = "현재 병해 또는 환경 위험으로 인한 예상 손실이 방제 비용보다 크므로, 방제 후 출하하는 것이 경제적으로 유리합니다."
+        if best["name"] == "즉시 방제":
+            decision = "즉시 방제 권장"
+            strategy = "세 가지 선택지 중 즉시 방제 시 예상 순이익이 가장 높습니다."
+        elif best["name"] == "2일 관찰 후 방제":
+            decision = "2일 관찰 후 방제 권장"
+            strategy = "현재는 즉시 방제보다 짧은 관찰 후 방제가 더 유리합니다."
         else:
-            decision = "관찰 후 출하 권장"
-            strategy = "현재 예상 손실이 방제 비용보다 작아 즉시 방제보다는 상태를 관찰하며 출하 시기를 조정하는 것이 유리합니다."
+            decision = "방제 없이 관찰 권장"
+            strategy = "현재 위험도에서는 방제 비용이 예상 손실보다 커서 관찰이 유리합니다."
 
-        # 7. 가격 기준 출하 전략
         if market_price >= 3000:
             market_strategy = "현재 시장 가격이 높으므로 빠른 출하가 유리합니다."
         elif market_price >= 2200:
-            market_strategy = "현재 시장 가격은 보통 수준입니다. 병해 위험이 높다면 방제 후 안정 출하를 권장합니다."
+            market_strategy = "현재 시장 가격은 보통 수준입니다. 품질을 유지하며 안정 출하를 권장합니다."
         else:
             market_strategy = "현재 시장 가격이 낮으므로 품질 관리 후 가격 회복 시 출하하는 전략이 유리합니다."
 
@@ -75,24 +65,15 @@ class EconAI:
             "gross_revenue": gross_revenue,
             "disease_risk": disease_risk,
             "env_risk": env_risk,
-            "loss_rate": round(loss_rate * 100, 1),
-            "expected_loss": expected_loss,
+            "loss_rate": scenarios[0]["loss_rate"],
+            "expected_loss": scenarios[0]["expected_loss"],
             "treatment_cost": treatment_cost,
             "profit_without_treatment": int(profit_without_treatment),
             "profit_with_treatment": int(profit_with_treatment),
             "benefit": int(benefit),
             "decision": decision,
             "strategy": strategy,
-            "market_strategy": market_strategy
+            "market_strategy": market_strategy,
+            "scenarios": scenarios,
+            "best_scenario": best["name"]
         }
-
-if __name__ == "__main__":
-    econ = EconAI()
-    result = econ.analyze(
-        production_kg=1000,
-        market_price=2600,
-        disease_risk=85,
-        env_risk=70,
-        treatment_cost=50000
-    )
-    print(result)
