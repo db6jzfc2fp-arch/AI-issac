@@ -170,6 +170,23 @@ econ_result = {
 final_risk_score = 0
 final_risk_level = "안정"
 
+env_result = {
+    "avg_temp": 25.0,
+    "avg_humidity": 69.0,
+    "risk_score": 0,
+    "risk_level": "안정",
+    "reasons": ["AI 연구원 회의 전 기본 환경 분석값입니다."],
+    "advice": ["환경데이터 업로드 후 분석을 실행하세요."]
+}
+
+patho_result = {
+    "disease": "뚜렷한 병징 없음",
+    "probability": 0,
+    "risk_score": 0,
+    "risk_level": "낮음",
+    "recommendation": "잎 사진 업로드 후 분석을 실행하세요."
+}
+
 if analyze:
 
     env_ai = EnvAI()
