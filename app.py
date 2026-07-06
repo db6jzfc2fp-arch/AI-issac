@@ -231,7 +231,7 @@ if analyze:
         chief_comment = "현재 위험도는 낮습니다. 기존 관리 상태를 유지하면서 정기 점검을 권장합니다."
     
     econ_comment = (
-    f"Econ-AI는 '{econ_result['best_scenario']}' 전략이 가장 유리하다고 판단했습니다. "
+    f"Econ-AI는 '{econ_result.get('best_scenario', '분석중')}' 전략이 가장 유리하다고 판단했습니다. "
     f"경제적 효과는 {econ_result['benefit']:,}원입니다."
     )
     
@@ -360,7 +360,7 @@ if analyze:
     
     st.dataframe(scenario_df, use_container_width=True)
     
-    st.success(f"✅ 최적 전략: {econ_result['best_scenario']}")
+    st.success(f"✅ 최적 전략: {econ_result.get('best_scenario', '분석중')}")
 
     with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
         st.warning(f"""
