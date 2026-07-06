@@ -401,7 +401,7 @@ Env-AI 분석 결과를 우선 종합합니다.
     {patho_result['probability']}%
     
     위험도
-    {patho_result['risk']}
+    {patho_result.get("risk_level", "낮음")}
     
     현재 상태
     🟢 Vision 분석 완료
