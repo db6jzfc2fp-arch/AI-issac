@@ -341,6 +341,22 @@ if analyze:
 {econ_result['market_strategy']}
 """)
 
+    st.write("### 📊 Econ-AI 의사결정 시뮬레이션")
+
+    scenario_df = pd.DataFrame(econ_result["scenarios"])
+    scenario_df = scenario_df.rename(columns={
+        "name": "전략",
+        "loss_rate": "예상 손실률(%)",
+        "expected_loss": "예상 손실액(원)",
+        "treatment_cost": "방제 비용(원)",
+        "profit": "예상 순이익(원)",
+        "label": "판단"
+    })
+    
+    st.dataframe(scenario_df, use_container_width=True)
+    
+    st.success(f"✅ 최적 전략: {econ_result['best_scenario']}")
+
     with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
         st.warning(f"""
 ### AI 책임연구원
