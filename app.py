@@ -182,13 +182,29 @@ if analyze:
         patho_result["probability"]
     )
 
+try:
     econ_result = econ_ai.analyze(
-    production_kg=1000,
-    market_price=2600,
-    disease_risk=patho_result.get("risk_score", patho_result.get("probability", 0)),
-    env_risk=env_result.get("risk_score", 0),
-    treatment_cost=50000
+        production_kg=1000,
+        market_price=2600,
+        disease_risk=patho_result.get("risk_score", patho_result.get("probability", 0)),
+        env_risk=env_result.get("risk_score", 0),
+        treatment_cost=50000
     )
+except Exception as e:
+    st.error(f"Econ-AI 분석 오류: {e}")
+    econ_result = {
+        "production_kg": 1000,
+        "market_price": 2600,
+        "gross_revenue": 2600000,
+        "loss_rate": 0,
+        "expected_loss": 0,
+        "treatment_cost": 50000,
+        "profit_without_treatment": 2600000,
+        "profit_with_treatment": 2550000,
+        "benefit": -50000,
+        "strategy": "기본 전략",
+        "market_strategy": "시장 분석 재시도"
+    }
 
     if final_risk_score >= 70:
         final_risk_level = "높음"
