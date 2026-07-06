@@ -67,18 +67,25 @@ class PathoAI:
         else:
             disease = "뚜렷한 병징 없음"
             probability = 18
-            risk = "낮음"
             recommendation = "현재 사진과 환경 기준으로 병해 위험은 낮습니다."
 
         print("powdery_ratio:", powdery_ratio)
         print("downy_ratio:", downy_ratio)
         print("brown_ratio:", brown_ratio)
         print("green_ratio:", green_ratio)
-        
+
+        if probability >= 70:
+            risk_level = "높음"
+        elif probability >= 40:
+            risk_level = "주의"
+        else:
+            risk_level = "낮음"
+
         return {
             "disease": disease,
             "probability": probability,
-            "risk": risk,
+            "risk": risk_level,
+            "risk_level": risk_level,
             "recommendation": recommendation,
             "powdery_ratio": round(powdery_ratio, 2),
             "downy_ratio": round(downy_ratio, 2),
