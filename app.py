@@ -153,23 +153,6 @@ st.markdown("---")
 
 analyze = st.button("🧠 AI 연구원 회의 시작")
 
-econ_result = {
-    "production_kg": 1000,
-    "market_price": 2600,
-    "gross_revenue": 2600000,
-    "loss_rate": 0,
-    "expected_loss": 0,
-    "treatment_cost": 50000,
-    "profit_without_treatment": 2600000,
-    "profit_with_treatment": 2550000,
-    "benefit": -50000,
-    "strategy": "AI 연구원 회의 전 기본 경제성 분석값입니다.",
-    "market_strategy": "시장 분석 대기"
-}
-
-final_risk_score = 0
-final_risk_level = "안정"
-
 env_result = {
     "avg_temp": 25.0,
     "avg_humidity": 69.0,
@@ -187,6 +170,23 @@ patho_result = {
     "recommendation": "잎 사진 업로드 후 분석을 실행하세요."
 }
 
+econ_result = {
+    "production_kg": 1000,
+    "market_price": 2600,
+    "gross_revenue": 2600000,
+    "loss_rate": 0,
+    "expected_loss": 0,
+    "treatment_cost": 50000,
+    "profit_without_treatment": 2600000,
+    "profit_with_treatment": 2550000,
+    "benefit": -50000,
+    "strategy": "시장 분석 대기",
+    "market_strategy": "시장 분석 대기"
+}
+
+final_risk_score = 0
+final_risk_level = "안정"
+
 env_ai = EnvAI()
 patho_ai = PathoAI()
 econ_ai = EconAI()
@@ -197,47 +197,22 @@ if analyze:
         st.warning("환경데이터를 먼저 업로드하세요.")
         st.stop()
 
+    if leaf_image is None:
+        st.warning("잎 사진을 먼저 업로드하세요.")
+        st.stop()
+
     if env_file.name.endswith(".csv"):
         df = pd.read_csv(env_file)
     else:
         df = pd.read_excel(env_file)
 
     env_result = env_ai.analyze(df)
-
-    if leaf_image is None:
-        st.warning("잎 사진을 먼저 업로드하세요.")
-        st.stop()
-
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
-    
+
     final_risk_score = max(
         env_result["risk_score"],
-        patho_result["probability"]
+        patho_result.get("probability", 0)
     )
-
-try:
-    econ_result = econ_ai.analyze(
-        production_kg=1000,
-        market_price=2600,
-        disease_risk=patho_result.get("risk_score", patho_result.get("probability", 0)),
-        env_risk=env_result.get("risk_score", 0),
-        treatment_cost=50000
-    )
-except Exception as e:
-    st.error(f"Econ-AI 분석 오류: {e}")
-    econ_result = {
-        "production_kg": 1000,
-        "market_price": 2600,
-        "gross_revenue": 2600000,
-        "loss_rate": 0,
-        "expected_loss": 0,
-        "treatment_cost": 50000,
-        "profit_without_treatment": 2600000,
-        "profit_with_treatment": 2550000,
-        "benefit": -50000,
-        "strategy": "기본 전략",
-        "market_strategy": "시장 분석 재시도"
-    }
 
     if final_risk_score >= 70:
         final_risk_level = "높음"
@@ -245,17 +220,29 @@ except Exception as e:
         final_risk_level = "주의"
     else:
         final_risk_level = "안정"
-    
+
+    try:
+        econ_result = econ_ai.analyze(
+            production_kg=1000,
+            market_price=2600,
+            disease_risk=patho_result.get("risk_score", patho_result.get("probability", 0)),
+            env_risk=env_result.get("risk_score", 0),
+            treatment_cost=50000
+        )
+    except Exception as e:
+        st.error(f"Econ-AI 분석 오류: {e}")
+
     st.success("🌤 Env-AI 환경 분석 완료")
+
     col1, col2 = st.columns(2)
 
     with col1:
         st.metric("🌡️ 평균 내부온도", f"{env_result['avg_temp']}℃")
+        st.metric("⚠️ 환경 위험도", f"{env_result['risk_score']}%")
 
     with col2:
         st.metric("💧 평균 내부습도", f"{env_result['avg_humidity']}%")
 
-    st.metric("⚠️ 환경 위험도", f"{env_result['risk_score']}%")
     st.write("위험등급 :", env_result["risk_level"])
 
     st.write("### 분석 이유")
@@ -270,6 +257,7 @@ except Exception as e:
     st.success("🟢 AI 연구원 회의를 시작합니다.")
 
     st.subheader("👨‍🔬 AI 연구원 회의")
+
     progress = st.progress(0)
     status = st.empty()
 
@@ -298,37 +286,33 @@ except Exception as e:
     st.markdown("---")
     st.subheader("🧑‍🔬 AI 연구원 회의")
 
-if analyze:
     with st.expander("🌿 Env-AI 발표", expanded=True):
         st.success(f"""
 ### 기상·환경 전문 연구원
-    
-    ▶ 평균 내부온도: {env_result['avg_temp']}℃
-    ▶ 평균 내부습도: {env_result['avg_humidity']}%
-    ▶ 환경 위험도: {env_result['risk_score']}%
-    ▶ 위험등급: {env_result['risk_level']}
-    
-    📢 의견
-    {env_result['reasons'][0]}
-    """)    
-    
+
+▶ 평균 내부온도: {env_result['avg_temp']}℃  
+▶ 평균 내부습도: {env_result['avg_humidity']}%  
+▶ 환경 위험도: {env_result['risk_score']}%  
+▶ 위험등급: {env_result['risk_level']}
+
+📢 의견  
+{env_result['reasons'][0]}
+""")
+
     with st.expander("🦠 Patho-AI 발표"):
         st.error(f"""
 ### 🦠 병해충 전문 연구원
 
-▶ 진단 결과 : {patho_result['disease']}
+▶ 진단 결과 : {patho_result['disease']}  
+▶ 발생 확률 : {patho_result['probability']}%  
+▶ 위험도 : {patho_result.get("risk_level", "낮음")}
 
-▶ 발생 확률 : {patho_result['probability']}%
-
-▶ 위험도 : {patho_result['risk']}
-
-📢 의견
-
+📢 의견  
 {patho_result['recommendation']}
 """)
 
-with st.expander("💰 Econ-AI 발표"):
-    st.info(f"""
+    with st.expander("💰 Econ-AI 발표"):
+        st.info(f"""
 ### 경영·유통 전문 연구원
 
 ▶ 예상 생산량: {econ_result['production_kg']:,}kg  
@@ -352,39 +336,17 @@ with st.expander("💰 Econ-AI 발표"):
         st.warning(f"""
 ### AI 책임연구원
 
-Env-AI 분석 결과를 우선 종합합니다.
+Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 
 ✔ 환경 위험도: {env_result['risk_score']}%  
-✔ 최종 위험등급: {env_result['risk_level']}  
+✔ 병해 위험도: {patho_result['probability']}%  
+✔ 최종 위험등급: {final_risk_level}
 
 최종 판단 생성 완료
 """)
 
     st.header("📊 분석 결과")
 
-    st.success("🌿 Env-AI 환경 분석 완료")
-
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.metric("🌡 평균 내부온도", f"{env_result['avg_temp']}℃")
-        st.metric("⚠️ 환경 위험도", f"{env_result['risk_score']}%")
-    
-    with col2:
-        st.metric("💧 평균 내부습도", f"{env_result['avg_humidity']}%")
-    
-    st.write("위험등급:", env_result["risk_level"])
-    
-    st.write("### 분석 이유")
-    for reason in env_result["reasons"]:
-        st.write("-", reason)
-    
-    st.write("### 개선 방법")
-    for tip in env_result["advice"]:
-        st.write("-", tip)
-    
-    st.markdown("---")
-    
     col1, col2 = st.columns(2)
 
     with col1:
@@ -393,52 +355,54 @@ Env-AI 분석 결과를 우선 종합합니다.
 
 기상·환경 전문 연구원
 
-담당
-• 내부온도
-• 내부습도
-• 외부온도
-• 풍속
-• 일사량
+담당  
+• 내부온도  
+• 내부습도  
+• 외부온도  
+• 풍속  
+• 일사량  
 • CO2
 
-판단
-
-환경 위험도: {env_result['risk_score']}%
-
+판단  
+환경 위험도: {env_result['risk_score']}%  
 위험등급: {env_result['risk_level']}
 """)
 
     with col2:
         st.error(f"""
-    🦠 Patho-AI
-    
-    병해충 전문 연구원
-    
-    진단 결과
-    {patho_result['disease']}
-    
-    발생 확률
-    {patho_result['probability']}%
-    
-    위험도
-    {patho_result.get("risk_level", "낮음")}
-    
-    현재 상태
-    🟢 Vision 분석 완료
-    """)
+🦠 Patho-AI
+
+병해충 전문 연구원
+
+진단 결과  
+{patho_result['disease']}
+
+발생 확률  
+{patho_result['probability']}%
+
+위험도  
+{patho_result.get("risk_level", "낮음")}
+
+현재 상태  
+🟢 Vision 분석 완료
+""")
 
     col3, col4 = st.columns(2)
 
     with col3:
-        st.info("""
+        st.info(f"""
 💰 Econ-AI
 
 경영·유통 전문 연구원
 
-현재 상태
-🟡 Day3 연결 예정
+예상 생산량  
+{econ_result['production_kg']:,}kg
 
-경제성 분석 대기
+예상 매출  
+{econ_result['gross_revenue']:,}원
+
+경제적 효과  
+{econ_result['benefit']:,}원
 """)
 
     with col4:
@@ -447,29 +411,26 @@ Env-AI 분석 결과를 우선 종합합니다.
 
 AI 책임연구원
 
-현재 판단 Env-AI와 Patho-AI 결과를 종합했습니다.
+현재 판단  
+Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 
-환경 위험도: {env_result['risk_score']}%
-
-병해 위험도: {patho_result['probability']}%
-
+환경 위험도: {env_result['risk_score']}%  
+병해 위험도: {patho_result['probability']}%  
 최종 위험등급: {final_risk_level}
-
 """)
 
-if analyze:    
     st.markdown("---")
     st.subheader("🏆 HG Lab 최종 행동지침")
 
     st.success(f"""
 ## 📋 오늘의 최종 의사결정
 
-🎯 종합 위험도
+🎯 종합 위험도  
 {final_risk_score}%
 
 ━━━━━━━━━━━━━━━━━━
 
-🟡 최종 위험등급
+🟡 최종 위험등급  
 {final_risk_level}
 
 ━━━━━━━━━━━━━━━━━━
@@ -489,8 +450,6 @@ Chief-AI 종합판단 완료
         st.write("• 현재 추가적인 병해 조치는 필요하지 않습니다.")
 
     st.markdown("---")
-    #st.success("환경데이터를 불러왔습니다.")
-    #st.dataframe(df.head())
 
 else:
     st.info("환경데이터를 업로드한 뒤 AI 연구원 회의를 시작하세요.")
