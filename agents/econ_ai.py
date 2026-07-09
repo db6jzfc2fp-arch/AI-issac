@@ -1,79 +1,50 @@
+import joblib
+import pandas as pd
+from pathlib import Path
+
+
 class EconAI:
-    def analyze(
-        self,
-        production_kg=1000,
-        market_price=2500,
-        disease_risk=0,
-        env_risk=0,
-        treatment_cost=50000
-    ):
-        gross_revenue = production_kg * market_price
+    def __init__(self):
+        model_path = Path("models/econ_ai_model.pkl")
 
-        base_loss_rate = min(
-            disease_risk * 0.22 + env_risk * 0.08,
-            45
-        )
-
-        scenarios = []
-
-        plans = [
-            ("즉시 방제", 0.35, treatment_cost, "추천"),
-            ("2일 관찰 후 방제", 0.55, int(treatment_cost * 0.9), "조건부"),
-            ("방제하지 않음", 1.0, 0, "비추천")
-        ]
-
-        for name, loss_multiplier, cost, label in plans:
-            loss_rate = base_loss_rate * loss_multiplier
-            expected_loss = int(gross_revenue * loss_rate / 100)
-            profit = gross_revenue - expected_loss - cost
-
-            scenarios.append({
-                "name": name,
-                "loss_rate": round(loss_rate, 1),
-                "expected_loss": expected_loss,
-                "treatment_cost": cost,
-                "profit": int(profit),
-                "label": label
-            })
-
-        best = max(scenarios, key=lambda x: x["profit"])
-
-        profit_without_treatment = scenarios[2]["profit"]
-        profit_with_treatment = scenarios[0]["profit"]
-        benefit = profit_with_treatment - profit_without_treatment
-
-        if best["name"] == "즉시 방제":
-            decision = "즉시 방제 권장"
-            strategy = "세 가지 선택지 중 즉시 방제 시 예상 순이익이 가장 높습니다."
-        elif best["name"] == "2일 관찰 후 방제":
-            decision = "2일 관찰 후 방제 권장"
-            strategy = "현재는 즉시 방제보다 짧은 관찰 후 방제가 더 유리합니다."
+        if not model_path.exists():
+            self.model = None
         else:
-            decision = "방제 없이 관찰 권장"
-            strategy = "현재 위험도에서는 방제 비용이 예상 손실보다 커서 관찰이 유리합니다."
+            self.model = joblib.load(model_path)
 
-        if market_price >= 3000:
-            market_strategy = "현재 시장 가격이 높으므로 빠른 출하가 유리합니다."
-        elif market_price >= 2200:
-            market_strategy = "현재 시장 가격은 보통 수준입니다. 품질을 유지하며 안정 출하를 권장합니다."
+    def analyze(self, env_result=None, patho_result=None):
+        if self.model is None:
+            return {
+                "econ_prediction": "모델 파일 없음",
+                "econ_confidence": 0,
+                "shipping_strategy": "models/econ_ai_model.pkl 파일을 확인하세요.",
+                "profit_advice": "Econ-AI 모델이 연결되지 않았습니다."
+            }
+
+        input_data = pd.DataFrame([{
+            "internal_temp": env_result.get("avg_temp", 25),
+            "internal_humidity": env_result.get("avg_humidity", 70),
+            "risk_score": env_result.get("risk_score", 50),
+            "disease_risk": patho_result.get("confidence", 0) if patho_result else 0
+        }])
+
+        prediction = self.model.predict(input_data)[0]
+
+        if hasattr(self.model, "predict_proba"):
+            confidence = max(self.model.predict_proba(input_data)[0]) * 100
         else:
-            market_strategy = "현재 시장 가격이 낮으므로 품질 관리 후 가격 회복 시 출하하는 전략이 유리합니다."
+            confidence = 0
+
+        if prediction == 1:
+            strategy = "출하 권장"
+            advice = "현재 환경과 병해 위험을 고려했을 때 출하 전략이 유리합니다."
+        else:
+            strategy = "출하 보류"
+            advice = "현재 조건에서는 품질 저하나 수익성 감소 가능성이 있어 출하를 보류하는 것이 좋습니다."
 
         return {
-            "production_kg": production_kg,
-            "market_price": market_price,
-            "gross_revenue": gross_revenue,
-            "disease_risk": disease_risk,
-            "env_risk": env_risk,
-            "loss_rate": scenarios[0]["loss_rate"],
-            "expected_loss": scenarios[0]["expected_loss"],
-            "treatment_cost": treatment_cost,
-            "profit_without_treatment": int(profit_without_treatment),
-            "profit_with_treatment": int(profit_with_treatment),
-            "benefit": int(benefit),
-            "decision": decision,
-            "strategy": strategy,
-            "market_strategy": market_strategy,
-            "scenarios": scenarios,
-            "best_scenario": best["name"]
+            "econ_prediction": int(prediction),
+            "econ_confidence": round(confidence, 1),
+            "shipping_strategy": strategy,
+            "profit_advice": advice
         }
