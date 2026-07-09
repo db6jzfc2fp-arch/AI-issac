@@ -1,3 +1,6 @@
+from tensorflow.keras.models import load_model
+import numpy as np
+import cv2
 from agents.econ_ai import EconAI
 import streamlit as st
 import pandas as pd
@@ -18,6 +21,14 @@ st.set_page_config(
     page_icon="🌱",
     layout="centered"
 )
+
+MODEL_PATH = "cucumber_leaf_best_model.keras"
+
+@st.cache_resource
+def load_patho_model():
+    return load_model(MODEL_PATH)
+
+patho_model = load_patho_model()
 
 st.markdown("""
 <style>
