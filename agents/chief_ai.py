@@ -10,7 +10,7 @@ class ChiefAI:
             actions.append("차광막을 활용하여 고온 스트레스를 줄이세요.")
 
         # 병해 분석
-        if patho_result["probability"] >= 70:
+        if patho_result["confidence"] >= 70:
             actions.append("노균병 예방 방제를 실시하는 것을 권장합니다.")
             actions.append("잎의 앞·뒷면을 추가로 점검하세요.")
 
