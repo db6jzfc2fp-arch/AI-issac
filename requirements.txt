@@ -4,3 +4,7 @@ numpy
 Pillow
 openpyxl
 opencv-python
+joblib
+scikit-learn
+tensorflow
+keras
