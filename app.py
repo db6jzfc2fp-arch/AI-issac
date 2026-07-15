@@ -137,6 +137,12 @@ env_file = st.file_uploader(
     type=["csv","xlsx"]
 )
 
+root_file = st.file_uploader(
+    "🌱 근권부(EC, pH) 데이터 업로드",
+    type=["csv","xlsx"],
+    key="root_file"
+)
+
 st.markdown("---")
 
 st.markdown("""
@@ -217,12 +223,43 @@ if analyze:
     else:
         df = pd.read_excel(env_file)
 
-    env_result = env_ai.analyze(df)
+    if root_file is not None:
+        if root_file.name.endswith(".csv"):
+            root_df = pd.read_csv(root_file)
+        else:
+            root_df = pd.read_excel(root_file)
+    else:
+        root_df = None
+
+    env_result = env_ai.analyze(df, root_df)
     patho_result = patho_ai.analyze_image(leaf_image, env_result)
 
+    # 병해가 아닌 정상·생육 단계 클래스
+    safe_classes = {
+        "건강한 잎",
+        "개화기",
+        "신선한 오이",
+        "결실기 1단계",
+        "결실기 2단계",
+        "결실기 3단계"
+    }
+
+    predicted_class = patho_result.get(
+        "raw_disease",
+        patho_result.get("disease", "")
+    )
+    patho_confidence = float(patho_result.get("confidence", 0))
+
+    # 정상 또는 생육 단계라면 확신도가 높을수록 병해 위험은 낮아짐
+    if predicted_class in safe_classes:
+        disease_risk_score = max(0, 100 - patho_confidence)
+    else:
+        disease_risk_score = patho_confidence
+
+    # 환경 위험과 실제 병해 위험 중 높은 값을 최종 위험도로 사용
     final_risk_score = max(
-        env_result["risk_score"],
-        patho_result.get("confidence", 0)
+        float(env_result.get("risk_score", 0)),
+        disease_risk_score
     )
 
     if final_risk_score >= 70:
@@ -232,46 +269,97 @@ if analyze:
     else:
         final_risk_level = "안정"
 
-    if patho_result["confidence"] >= 70:
-        chief_comment = "병해 위험도가 높게 나타났습니다. 즉시 병든 잎 제거와 환기 강화가 필요합니다."
-    elif env_result["risk_score"] >= 70:
-        chief_comment = "환경 위험도가 높게 나타났습니다. 온습도와 환기 상태를 우선 점검해야 합니다."
-    elif econ_result["benefit"] > 0:
-        chief_comment = "방제 후 경제적 이익이 예상됩니다. 방제 후 안정 출하 전략이 유리합니다."
+    if predicted_class not in safe_classes and disease_risk_score >= 70:
+        chief_comment = (
+            f"병해 진단 결과 '{predicted_class}' 가능성이 "
+            f"{patho_confidence:.1f}%로 높게 나타났습니다. "
+            "해당 병해에 맞는 현장 확인과 초기 대응이 필요합니다."
+        )
+
+    elif env_result.get("risk_score", 0) >= 70:
+        chief_comment = (
+            "환경 위험도가 높게 나타났습니다. "
+            "온도·습도·환기와 근권부 EC·pH 상태를 우선 점검해야 합니다."
+     )
+
+    elif predicted_class in safe_classes:
+        chief_comment = (
+            f"Patho-AI는 '{predicted_class}' 상태를 "
+            f"{patho_confidence:.1f}% 확률로 예측했습니다. "
+            "현재 뚜렷한 병해 위험은 낮으므로 기존 관리 상태를 유지하고 "
+            "정기적으로 잎과 환경 상태를 점검하는 것이 적절합니다."
+        )
+
     else:
-        chief_comment = "현재 위험도는 낮습니다. 기존 관리 상태를 유지하면서 정기 점검을 권장합니다."
+        chief_comment = (
+            "현재 종합 위험도는 낮거나 주의 수준입니다. "
+            "즉각적인 방제보다는 지속적인 관찰과 예방 관리가 적절합니다."
+        )
     
-    econ_comment = (
-    f"Econ-AI는 '{econ_result.get('best_scenario', '분석중')}' 전략이 가장 유리하다고 판단했습니다. "
-    f"경제적 효과는 {econ_result['benefit']:,}원입니다."
-    )
+    #econ_comment = (
+    #f"Econ-AI는 '{econ_result.get('best_scenario', '분석중')}' 전략이 가장 유리하다고 판단했습니다. "
+    #f"경제적 효과는 {econ_result['benefit']:,}원입니다."
+    #)
     
     try:
         econ_result = econ_ai.analyze(
-            production_kg=1000,
-            market_price=2600,
-            disease_risk=patho_result.get("risk_score", patho_result.get("confidence", 0)),
-            env_risk=env_result.get("risk_score", 0),
-            treatment_cost=50000
-        )
-
-        econ_result.setdefault("production_kg", 1000)
-        econ_result.setdefault("market_price", 2600)
-        econ_result.setdefault("gross_revenue", 2600000)
-        econ_result.setdefault("loss_rate", 0)
-        econ_result.setdefault("expected_loss", 0)
-        econ_result.setdefault("treatment_cost", 50000)
-        econ_result.setdefault("profit_without_treatment", 2600000)
-        econ_result.setdefault("profit_with_treatment", 2550000)
-        econ_result.setdefault("benefit", 50000)
-        econ_result.setdefault("strategy", "경제성 분석 완료")
-        econ_result.setdefault("market_strategy", "분석 완료")
-        econ_result.setdefault("best_scenario", "분석 완료")
+        env_result=env_result,
+        patho_result={
+            **patho_result,
+            "disease_risk": disease_risk_score
+        },
+        production_kg=1000,
+        market_price=2600,
+        treatment_cost=50000
+       )
 
     except Exception as e:
         st.error(f"Econ-AI 분석 오류: {e}")
+        st.stop()
 
-    st.success("🌤 Env-AI 환경 분석 완료")
+    chief_result = chief_ai.make_decision(
+        env_result=env_result,
+        patho_result={
+            **patho_result,
+            "disease_risk": disease_risk_score
+        },
+        econ_result=econ_result
+    )    
+
+    economic_effect = float(econ_result.get("benefit", 0))
+    best_scenario = econ_result.get("best_scenario", "상태 관찰")
+
+    if economic_effect > 0:
+        econ_comment = (
+            f"Econ-AI는 '{best_scenario}' 전략을 권장했습니다. "
+            f"예상 경제적 효과는 약 {economic_effect:,.0f}원입니다."
+        )
+    elif economic_effect < 0:
+        econ_comment = (
+            f"Econ-AI는 '{best_scenario}' 전략을 권장했습니다. "
+            f"현재 방제를 실시하면 약 "
+            f"{abs(economic_effect):,.0f}원의 추가 비용이 발생합니다."
+        )
+    else:
+        econ_comment = (
+            f"Econ-AI는 '{best_scenario}' 전략을 권장했습니다. "
+            "두 시나리오의 경제적 차이는 크지 않습니다."
+        )
+
+        #econ_result.setdefault("production_kg", 1000)
+        #econ_result.setdefault("market_price", 2600)
+        #econ_result.setdefault("gross_revenue", 2600000)
+        #econ_result.setdefault("loss_rate", 0)
+        #econ_result.setdefault("expected_loss", 0)
+        #econ_result.setdefault("treatment_cost", 50000)
+        #econ_result.setdefault("profit_without_treatment", 2600000)
+        #econ_result.setdefault("profit_with_treatment", 2550000)
+        #con_result.setdefault("benefit", 50000)
+        #econ_result.setdefault("strategy", "경제성 분석 완료")
+        #econ_result.setdefault("market_strategy", "분석 완료")
+        #econ_result.setdefault("best_scenario", "분석 완료")
+
+        st.success("🌤 Env-AI 환경 분석 완료")
 
     col1, col2 = st.columns(2)
 
@@ -357,112 +445,112 @@ if analyze:
 
     st.write("### 📊 Econ-AI 의사결정 시뮬레이션")
 
-    st.success(f"📦 출하 전략: {econ_result.get('shipping_strategy', '분석중')}")
-    st.write(f"예측 신뢰도: {econ_result.get('econ_confidence', 0)}%")
-    st.write(econ_result.get("profit_advice", "경제성 분석 결과를 확인 중입니다."))
+    production_kg = float(econ_result.get("production_kg", 1000))
+    market_price = float(econ_result.get("market_price", 2600))
+    treatment_cost = float(econ_result.get("treatment_cost", 50000))
+
+    # 현재 병해 위험도
+    current_loss_rate = float(econ_result.get("loss_rate", disease_risk_score))
+
+    # 방제 실시 시 손실률 감소를 가정
+    treated_loss_rate = max(0.0, current_loss_rate * 0.35)
+
+    gross_revenue = production_kg * market_price
+
+    profit_without_treatment = gross_revenue * (1 - current_loss_rate / 100)
+
+    profit_with_treatment = (
+        gross_revenue * (1 - treated_loss_rate / 100)
+        - treatment_cost
+    )
+
+    economic_difference = profit_with_treatment - profit_without_treatment
+
+    col_sim1, col_sim2 = st.columns(2)
+
+    with col_sim1:
+        st.info(f"""
+    ### 방제 미실시
+    - 예상 손실률: {current_loss_rate:.1f}%
+    - 예상 매출: {gross_revenue:,.0f}원
+    - 예상 순이익: {profit_without_treatment:,.0f}원
+    """)
+
+    with col_sim2:
+        st.success(f"""
+    ### 방제 실시
+    - 예상 손실률: {treated_loss_rate:.1f}%
+    - 방제 비용: {treatment_cost:,.0f}원
+    - 예상 순이익: {profit_with_treatment:,.0f}원
+    """)
+
+    if economic_difference > 0:
+        st.success(
+            f"AI 추천: 방제를 실시하면 약 {economic_difference:,.0f}원의 "
+            "추가 경제효과가 예상됩니다."
+        )
+    else:
+        st.warning(
+            f"AI 추천: 현재는 방제 비용이 예상 효과보다 "
+            f"{abs(economic_difference):,.0f}원 더 커서 즉시 방제를 권장하지 않습니다."
+        )
 
     with st.expander("👨🏻‍💼 Chief-AI 최종 회의"):
         st.warning(f"""
+    ### AI 책임연구원
+
+    Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
+
+    ✔ 환경 위험도: {chief_result.get('environment_risk', 0)}%  
+    ✔ 병해 위험도: {chief_result.get('disease_risk', 0)}%  
+    ✔ Econ-AI 전략: {chief_result.get('best_scenario', '상태 관찰')}  
+    ✔ 예상 손실률: {chief_result.get('loss_rate', 0)}%  
+    ✔ 경제적 효과: {chief_result.get('benefit', 0):,}원  
+
+    ---
+
+    ### 최종 판단
+
+    {chief_result.get('summary', '최종 판단을 생성했습니다.')}
+
+    ### 최종 위험등급
+
+    {chief_result.get('final_risk_level', '안정')}
+
+    최종 판단 생성 완료
+    """)
+
+        st.write("### 연구원 종합 행동지침")
+
+        for action in chief_result.get("actions", []):
+            st.write(f"• {action}")
+
 ### AI 책임연구원
 
-Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
+#Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
 
-✔ 환경 위험도: {env_result['risk_score']}%  
-✔ 병해 위험도: {patho_result['confidence']}%  
-✔ 예상 손실률: {econ_result.get('loss_rate', 0)}% 
-✔ 예상 손실액: {econ_result.get('expected_loss', 0):,}원 
-✔ 방제 비용: {econ_result.get('treatment_cost', 0):,}원  
-✔ 경제적 효과: {econ_result.get('benefit', 0):,}원  
+#✔ 환경 위험도: {env_result['risk_score']}%  
+#✔ 병해 위험도: {disease_risk_score:.1f}% 
+#✔ 예상 손실액: {econ_result.get('expected_loss', 0):,}원 
+#✔ 방제 비용: {econ_result.get('treatment_cost', 0):,}원  
+#✔ 경제적 효과: {econ_result.get('benefit', 0):,}원  
 
----
+#---
 
 ### 최종 판단
 
-{chief_comment}
+#{chief_comment}
 
-{econ_comment}
+#{econ_comment}
 
 ### 최종 위험등급
 
-{final_risk_level}
+#{final_risk_level}
 
-최종 판단 생성 완료
-""")
+#최종 판단 생성 완료
+#""")
 
-    st.header("📊 분석 결과")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.success(f"""
-🛰️ Env-AI
-
-기상·환경 전문 연구원
-
-담당  
-• 내부온도  
-• 내부습도  
-• 외부온도  
-• 풍속  
-• 일사량  
-• CO2
-
-판단  
-환경 위험도: {env_result['risk_score']}%  
-위험등급: {env_result['risk_level']}
-""")
-
-    with col2:
-        st.error(f"""
-🦠 Patho-AI
-
-병해충 전문 연구원
-
-진단 결과  
-{patho_result['disease']}
-
-발생 확률  
-{patho_result['confidence']}%
-
-위험도  
-{patho_result.get("risk_level", "낮음")}
-
-현재 상태  
-🟢 Vision 분석 완료
-""")
-
-    col3, col4 = st.columns(2)
-
-    with col3:
-        st.info(f"""
-💰 Econ-AI
-
-경영·유통 전문 연구원
-
-예상 생산량  
-{econ_result['production_kg']:,}kg
-
-예상 매출  
-{econ_result['gross_revenue']:,}원
-
-경제적 효과  
-{econ_result['benefit']:,}원
-""")
-
-    with col4:
-        st.warning(f"""
-👨🏻‍💼 Chief-AI
-
-AI 책임연구원
-
-현재 판단  
-Env-AI, Patho-AI, Econ-AI 결과를 종합했습니다.
-
-환경 위험도: {env_result['risk_score']}%  
-병해 위험도: {patho_result['confidence']}%  
-최종 위험등급: {final_risk_level}
-""")
-
+    
     st.markdown("---")
     st.subheader("🏆 HG Lab 최종 행동지침")
 
@@ -487,11 +575,23 @@ Chief-AI 종합판단 완료
     for tip in env_result["advice"]:
         st.write(f"• {tip}")
 
-    if patho_result["confidence"] >= 70:
-        st.write("• 병든 잎을 제거하세요.")
-        st.write("• 환기를 강화하세요.")
+    if predicted_class in safe_classes:
+        st.write("• 현재 추가적인 병해 방제는 필요하지 않습니다.")
+        st.write("• 기존 관리 상태를 유지하세요.")
+        st.write("• 잎과 환경 상태를 정기적으로 재확인하세요.")
+
+    elif disease_risk_score >= 70:
+        st.write(f"• '{predicted_class}' 의심 부위를 현장에서 확인하세요.")
+        st.write("• 피해 잎이나 과실을 제거하세요.")
+        st.write("• 환기와 습도 관리를 강화하세요.")
+
+    elif disease_risk_score >= 40:
+        st.write("• 즉시 방제보다 병징 변화를 지속적으로 관찰하세요.")
+        st.write("• 다른 각도에서 잎 사진을 다시 촬영해 분석하세요.")
+
     else:
-        st.write("• 현재 추가적인 병해 조치는 필요하지 않습니다.")
+        st.write("• 현재 뚜렷한 병해 위험은 낮습니다.")
+        st.write("• 예방 관리와 정기 점검을 유지하세요.")
 
     st.markdown("---")
 

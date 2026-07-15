@@ -118,7 +118,12 @@ def build_dataloaders(data_dir, batch_size, num_workers, device):
     train_transform, eval_transform = build_transforms()
 
     train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
+
+    print("Classes:", train_dataset.classes)
+
     test_dataset = datasets.ImageFolder(root=test_dir, transform=eval_transform)
+
+    print("Classes:", train_dataset.classes)
 
     if train_dataset.classes != test_dataset.classes:
         raise ValueError(

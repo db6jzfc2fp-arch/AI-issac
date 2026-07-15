@@ -2,17 +2,17 @@ import pandas as pd
 
 class EnvAI:
 
-    def analyze(self, df):
+    def analyze(self, env_df, root_df=None):
 
         # 숫자 변환
-        internal_temp = pd.to_numeric(df["온도_내부"], errors="coerce")
-        outside_temp = pd.to_numeric(df["온도_외부"], errors="coerce")
-        humidity = pd.to_numeric(df["상대습도_내부"], errors="coerce")
-        wind_speed = pd.to_numeric(df["풍속_외부"], errors="coerce")
-        solar = pd.to_numeric(df["일사량_외부"], errors="coerce")
-        total_solar = pd.to_numeric(df["누적일사량_외부"], errors="coerce")
-        co2 = pd.to_numeric(df["잔존CO2"], errors="coerce")
-        soil_temp = pd.to_numeric(df["토양온도"], errors="coerce")
+        internal_temp = pd.to_numeric(env_df["온도_내부"], errors="coerce")
+        outside_temp = pd.to_numeric(env_df["온도_외부"], errors="coerce")
+        humidity = pd.to_numeric(env_df["상대습도_내부"], errors="coerce")
+        wind_speed = pd.to_numeric(env_df["풍속_외부"], errors="coerce")
+        solar = pd.to_numeric(env_df["일사량_외부"], errors="coerce")
+        total_solar = pd.to_numeric(env_df["누적일사량_외부"], errors="coerce")
+        co2 = pd.to_numeric(env_df["잔존CO2"], errors="coerce")
+        soil_temp = pd.to_numeric(env_df["토양온도"], errors="coerce")
 
         # 평균 계산
         avg_temp = round(internal_temp.mean(), 1)
@@ -23,6 +23,23 @@ class EnvAI:
         avg_total_solar = round(total_solar.mean(), 1)
         avg_co2 = round(co2.mean(), 1)
         avg_soil_temp = round(soil_temp.mean(), 1)
+
+        # ==========================
+        # 근권부(EC, pH) 분석
+        # ==========================
+
+        if root_df is not None:
+
+            ec = pd.to_numeric(root_df["EC"], errors="coerce")
+            ph = pd.to_numeric(root_df["pH"], errors="coerce")
+
+            avg_ec = round(ec.mean(), 2)
+            avg_ph = round(ph.mean(), 2)
+
+        else:
+
+            avg_ec = None
+            avg_ph = None
 
         risk_score = 0
         reasons = []
@@ -72,6 +89,58 @@ class EnvAI:
 
         risk_score = min(risk_score, 100)
 
+        # ==========================
+        # 근권부 EC·pH 위험 분석
+        # ==========================
+
+        if avg_ec is not None and pd.notna(avg_ec):
+            if avg_ec < 1.5:
+                risk_score += 15
+                reasons.append(
+                    f"평균 EC가 {avg_ec} mS/cm로 낮아 양분 부족 가능성이 있습니다."
+                )
+                advice.append(
+                    "양액 농도를 한 번에 크게 올리지 말고 단계적으로 조정하세요."
+                )
+
+            elif avg_ec > 2.5:
+                risk_score += 20
+                reasons.append(
+                    f"평균 EC가 {avg_ec} mS/cm로 높아 염류 스트레스 가능성이 있습니다."
+                )
+                advice.append(
+                    "관수량과 배액 상태를 확인하고 필요하면 저농도 양액 또는 물로 세척 관수를 검토하세요."
+                )
+            else:
+                reasons.append(
+                    f"평균 EC는 {avg_ec} mS/cm로 관리 범위에 있습니다."
+                )
+
+        if avg_ph is not None and pd.notna(avg_ph):
+            if avg_ph < 5.5:
+                risk_score += 15
+                reasons.append(
+                    f"평균 pH가 {avg_ph}로 낮아 일부 양분 흡수 불균형 가능성이 있습니다."
+                )
+                advice.append(
+                    "양액 pH를 한 번에 크게 변경하지 말고 5.5~6.5 범위로 서서히 조정하세요."
+                )
+
+            elif avg_ph > 6.5:
+                risk_score += 15
+                reasons.append(
+                    f"평균 pH가 {avg_ph}로 높아 미량원소 흡수 저하 가능성이 있습니다."
+                )
+                advice.append(
+                    "급액 pH와 원수 pH를 확인하고 5.5~6.5 범위로 서서히 조정하세요."
+                ) 
+            else:
+                reasons.append(
+                    f"평균 pH는 {avg_ph}로 관리 범위에 있습니다."
+                )
+
+        risk_score = min(risk_score, 100)
+
         if risk_score >= 70:
             risk_level = "위험"
         elif risk_score >= 40:
@@ -88,11 +157,16 @@ class EnvAI:
             "avg_temp": avg_temp,
             "avg_outside_temp": avg_outside_temp,
             "avg_humidity": avg_humidity,
+            
+            "avg_ec": avg_ec,
+            "avg_ph": avg_ph,
+            
             "avg_wind_speed": avg_wind_speed,
             "avg_solar": avg_solar,
             "avg_total_solar": avg_total_solar,
             "avg_co2": avg_co2,
             "avg_soil_temp": avg_soil_temp,
+            
             "risk_score": risk_score,
             "risk_level": risk_level,
             "reasons": reasons,
